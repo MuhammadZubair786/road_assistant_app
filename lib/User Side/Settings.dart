@@ -99,13 +99,13 @@ class _SettingScreenState extends State<SettingScreen> {
                   );
                 }),
                 SizedBox(height: 30),
-                buildSettingsButton('Help & Feedback', () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => FeedbackScreen()),
-                  );
-                }),
-                SizedBox(height: 60),
+                // buildSettingsButton('Help & Feedback', () {
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(builder: (context) => FeedbackScreen(requestData: "",)),
+                //   );
+                // }),
+                // SizedBox(height: 60),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(

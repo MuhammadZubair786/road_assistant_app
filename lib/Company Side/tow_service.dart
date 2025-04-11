@@ -326,13 +326,13 @@ class BuildRequestCard extends StatelessWidget {
                   onPressed: () => _acceptRequest(context),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF001E62)),
-                  child: Text("Accept", style: TextStyle(color: Colors.white)),
+                  child: const Text("Accept", style: TextStyle(color: Colors.white)),
                 ),
                 ElevatedButton(
                   onPressed: () => _deleteRequest(context),
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF001E62)),
-                  child: Text("Decline", style: TextStyle(color: Colors.white)),
+                  child: const Text("Decline", style: TextStyle(color: Colors.white)),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -355,7 +355,7 @@ class BuildRequestCard extends StatelessWidget {
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Request not found")),
+                        const SnackBar(content: Text("Request not found")),
                       );
                     }
                   },
@@ -387,19 +387,9 @@ class BuildRequestCard extends StatelessWidget {
           .update({
         "status": "accepted",
         'timestamp': FieldValue.serverTimestamp(),
+         "_id":requestId
       });
-      // Update the request status to 'accepted'
-      // await FirebaseFirestore.instance
-      //     .collection('requests')
-      //     .doc(requestId)
-      //     .update({'status': 'accepted'});
-
-      // Delete the request from the current list
-      // await FirebaseFirestore.instance
-      //     .collection('requests')
-      //     .doc(requestId)
-      //     .delete();
-
+     
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

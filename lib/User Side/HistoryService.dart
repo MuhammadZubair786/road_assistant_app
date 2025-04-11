@@ -228,7 +228,34 @@ Widget buildServiceCard(BuildContext context, Map<String, dynamic> service,
                   ],
                 ),
               ),
-              ElevatedButton(
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) =>
+              //             HistoryInformation(requestData: service),
+              //       ),
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: const Color(0xFF001E62),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(20),
+              //     ),
+              //     padding:
+              //         const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              //   ),
+              //   child: const Text(
+              //     "Done",
+              //     style: TextStyle(
+              //         fontSize: 12,
+              //         fontWeight: FontWeight.bold,
+              //         color: Colors.white),
+              //   ),
+              // ),
+              SizedBox(width: 20,),
+               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,

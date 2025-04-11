@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_app/LoginOnly.dart';
 import 'package:flutter/material.dart';
 import '../User Side/Register.dart';
 
@@ -16,7 +17,7 @@ class _SplashscreenState extends State<Splashscreen> {
     Timer(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const RegistrationScreen()),
+        MaterialPageRoute(builder: (context) => const loginOnly()),
       );
     });
   }

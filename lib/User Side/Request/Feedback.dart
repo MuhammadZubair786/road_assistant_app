@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../home_screen.dart';
 
 class FeedbackScreen extends StatefulWidget {
-  const FeedbackScreen({super.key});
+  var requestData;
+   FeedbackScreen({super.key,required this.requestData});
   @override
   _FeedbackScreenState createState() => _FeedbackScreenState();
 }
@@ -24,6 +25,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   Future<void> _fetchCompanyDetails() async {
     User? user = FirebaseAuth.instance.currentUser;
+    widget.requestData;
     if (user == null) return;
     try {
       DocumentSnapshot doc = await FirebaseFirestore.instance
@@ -55,12 +57,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         'timestamp': FieldValue.serverTimestamp(), // Store timestamp
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Feedback submitted successfully!"),
           backgroundColor: Colors.green,
         ),
       );
       Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
       );
@@ -119,8 +122,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 50),
-            CircleAvatar(
+            const SizedBox(height: 50),
+            const CircleAvatar(
               backgroundColor: Color(0xFF001E62),
               radius: 40,
               child: CircleAvatar(
@@ -129,22 +132,22 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 child: Icon(Icons.business, color: Colors.black, size: 25),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
-              companyName, // Display fetched name
+               widget.requestData["companyName"], // Display fetched name
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Text(
-              companyAddress, // Display fetched address
+              widget.requestData["companyAddress"], // Display fetched address
               style: TextStyle(color: Colors.grey, fontSize: 12),
             ),
-            SizedBox(height: 70),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "How is your experience?",
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "Your feedback will help improve \nservice experience",
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey, fontSize: 12),

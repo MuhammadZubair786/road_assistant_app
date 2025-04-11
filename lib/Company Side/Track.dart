@@ -2,8 +2,11 @@ import 'package:firebase_app/Company%20Side/CompanyNotification.dart';
 import 'package:firebase_app/Company%20Side/Drawer.dart';
 import 'package:firebase_app/Company%20Side/client_issue_details.dart';
 import 'package:firebase_app/Company%20Side/issue_details.dart';
+import 'package:firebase_app/Company%20Side/issuedetailsAccept.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'viewClinetDetails.dart';
 
 class Track extends StatefulWidget {
   @override
@@ -90,14 +93,15 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('requests') // Updated to match RequestConfirmation
+            .where("status",isEqualTo: "pending")
             .orderBy('timestamp', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text("No service requests available."));
+            return const Center(child: Text("No service requests available."));
           }
           var serviceRequests = snapshot.data!.docs;
           return ListView.builder(
@@ -128,21 +132,23 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text("$car_no",
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                           "$selected_vehicle | $car_color | $selected_service | $car_no",
                           style: TextStyle(color: Colors.grey[700])),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+
+                            },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFF001E62)),
-                            child: Text("Done",
+                            child: const Text("Done",
                                 style: TextStyle(color: Colors.white)),
                           ),
                           ElevatedButton(
@@ -151,12 +157,12 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        IssueDetails(requestData: serviceData)),
+                                        IssueDetailsAccept(requestData: serviceData)),
                               );
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(0xFF001E62)),
-                            child: Text("Locate Client",
+                            child: const Text("Locate Client",
                                 style: TextStyle(color: Colors.white)),
                           ),
                         ],
@@ -175,19 +181,17 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
   Widget _buildServiceHistory() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: StreamBuilder<QuerySnapshot>(
+      child:  StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('Company')
-            .doc("YOUR_COMPANY_ID") // Replace with your actual company ID
-            .collection('accepted_services')
-            .orderBy('timestamp', descending: true)
+            .collection('requests') // Updated to match RequestConfirmation
+            .where("status",isEqualTo: "accepted")
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text("No service history available."));
+            return const Center(child: Text("No service history available."));
           }
 
           var services = snapshot.data!.docs;
@@ -206,23 +210,29 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
                   ? "${timestamp.toDate().toLocal()}"
                   : "Unknown time";
 
-              return Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(carNo,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text(
-                          "$selectedVehicle | $vehicleColor | $selectedService | $vehicleNo"),
-                      SizedBox(height: 10),
-                      Text(formattedDate,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                    ],
+              return GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>IssueDetailsHistory(requestData: service,)));
+
+                },
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(carNo,
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                            "$selectedVehicle | $vehicleColor | $selectedService | $vehicleNo"),
+                        SizedBox(height: 10),
+                        Text(formattedDate,
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
                   ),
                 ),
               );

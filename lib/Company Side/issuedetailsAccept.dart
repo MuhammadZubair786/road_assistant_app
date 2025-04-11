@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_app/global.dart';
 import 'package:flutter/material.dart';
-import 'client_issue_details.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class IssueDetails extends StatefulWidget {
+// ignore: must_be_immutable
+class IssueDetailsAccept extends StatefulWidget {
   var requestData;
-   IssueDetails({super.key, this.requestData});
+  IssueDetailsAccept({super.key, this.requestData});
 
   @override
-  State<IssueDetails> createState() => _IssueDetailsState();
+  State<IssueDetailsAccept> createState() => _IssueDetailsAcceptState();
 }
 
-class _IssueDetailsState extends State<IssueDetails> {
+class _IssueDetailsAcceptState extends State<IssueDetailsAccept> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,45 +36,51 @@ class _IssueDetailsState extends State<IssueDetails> {
                   _buildCard(
                     title: "Vehicle Details",
                     children: [
-                      _buildDetailRow("Vehicle Owner",widget.requestData['car_no']),
                       _buildDetailRow(
-                          "Vehicle Type", widget.requestData['selected_service']),
+                          "Vehicle Owner", widget.requestData['car_no']),
+                      _buildDetailRow("Vehicle Type",
+                          widget.requestData['selected_service']),
+                      _buildDetailRow("Vehicle Name",
+                          widget.requestData['selected_vehicle']),
                       _buildDetailRow(
-                          "Vehicle Name", widget.requestData['selected_vehicle']),
-                      _buildDetailRow("Vehicle Color", widget.requestData['car_color']),
+                          "Vehicle Color", widget.requestData['car_color']),
                     ],
                   ),
                   _buildCard(
                     title: "Client Service Request",
                     children: [
-                      _buildDetailRow("Client Issue Type", widget.requestData['details']),
-                      _buildDetailRow("Client Location", widget.requestData['location'],
+                      _buildDetailRow(
+                          "Client Issue Type", widget.requestData['details']),
+                      _buildDetailRow(
+                          "Client Location", widget.requestData['location'],
                           isLink: true),
-                      _buildDetailRow("Client Contact", issueData['contact_no']),
+                      _buildDetailRow(
+                          "Client Contact", issueData['contact_no']),
                     ],
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     child: Card(
-                   color: Colors.white,
-                elevation: 3,
-                shape:
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                      color: Colors.white,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             const Text(
+                            const Text(
                               "description :",
-                              style:
-                                  TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                issueData['details'] ?? "No description provided.",
+                                issueData['details'] ??
+                                    "No description provided.",
                                 style: const TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500),
                               ),
@@ -82,7 +90,7 @@ class _IssueDetailsState extends State<IssueDetails> {
                       ),
                     ),
                   ),
-      
+
                   // _buildCard(
                   //   title: "Client Added Text",
                   //   children: [
@@ -101,7 +109,7 @@ class _IssueDetailsState extends State<IssueDetails> {
                   //     ),
                   //   ],
                   // ),
-                  _buildButtons(context,widget.requestData),
+                  _buildButtons(context, widget.requestData),
                 ],
               ),
             );
@@ -159,8 +167,8 @@ class _IssueDetailsState extends State<IssueDetails> {
             child: Card(
               color: Colors.white,
               elevation: 3,
-              shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
@@ -206,84 +214,52 @@ class _IssueDetailsState extends State<IssueDetails> {
     );
   }
 
-
-  void _acceptRequest(BuildContext context,requestId) async {
-
-      await FirebaseFirestore.instance
-          .collection('requests')
-          .doc(requestId) 
-          .update({
-        "status": "accepted",
-        'timestamp': FieldValue.serverTimestamp(),
-        "_id":requestId
-      });
-     
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("Request accepted and moved to service history")),
-      );
-    
-  }
-
-  void _deleteRequest(BuildContext context,requestId) async {
-   
-    await FirebaseFirestore.instance
-        .collection('requests')
-        .doc(requestId)
-        .update({
-          "status":"rejected"
-        });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Request removed")),
-    );
-  }
-
-  Widget _buildButtons(BuildContext context,requestData) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+  Widget _buildButtons(BuildContext context, requestData) {
+    return Container(
+      margin: EdgeInsets.all(5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _buildButtonDec(context, "Decline",requestData),
-          _buildButtonAce(context, "Accept",requestData),
+          _buildButtonDec(
+            context,
+            "Call",
+            requestData,
+          ),
+          _buildButtonDec(
+            context,
+            "Whatsapp Call",
+            requestData,
+          ),
+          _buildButtonDec(context, "Message", requestData),
         ],
       ),
     );
   }
 
-  Widget _buildButtonDec(BuildContext context, String text,requestData) {
+  Widget _buildButtonDec(BuildContext context, String text, requestData) {
     return ElevatedButton(
       onPressed: () {
-   _deleteRequest(context,requestData["_id"]);
+        _handleButtonPress(text, requestData);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF001E62),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        minimumSize: const Size(140, 45),
+        minimumSize: const Size(80, 45),
       ),
       child: Text(text,
           style: const TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+              fontWeight: FontWeight.bold, fontSize: 12, color: Colors.white)),
     );
   }
 
-  Widget _buildButtonAce(BuildContext context, String text,requestData) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ClientIssueDetails()),
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF001E62),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        minimumSize: const Size(140, 45),
-      ),
-      child: Text(text,
-          style: const TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
-    );
+  void _handleButtonPress(String type, data) async {
+    if (type == "Message") {
+      openSmsApp(data["contact_no"]);
+    } else if (type == "Whatsapp Call") {
+      openWhatsapp(data);
+      //for whatsapp
+    } else if (type == "Call") {
+      openCallDailer(data);
+    }
   }
 }

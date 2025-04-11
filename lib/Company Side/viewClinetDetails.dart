@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'client_issue_details.dart';
 
-class IssueDetails extends StatefulWidget {
+class IssueDetailsHistory extends StatefulWidget {
   var requestData;
-   IssueDetails({super.key, this.requestData});
+   IssueDetailsHistory({super.key, this.requestData});
 
   @override
-  State<IssueDetails> createState() => _IssueDetailsState();
+  State<IssueDetailsHistory> createState() => _IssueDetailsHistoryState();
 }
 
-class _IssueDetailsState extends State<IssueDetails> {
+class _IssueDetailsHistoryState extends State<IssueDetailsHistory> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -101,7 +101,7 @@ class _IssueDetailsState extends State<IssueDetails> {
                   //     ),
                   //   ],
                   // ),
-                  _buildButtons(context,widget.requestData),
+                  // _buildButtons(context,widget.requestData),
                 ],
               ),
             );
@@ -215,7 +215,7 @@ class _IssueDetailsState extends State<IssueDetails> {
           .update({
         "status": "accepted",
         'timestamp': FieldValue.serverTimestamp(),
-        "_id":requestId
+         "_id":requestId
       });
      
       ScaffoldMessenger.of(context).showSnackBar(
@@ -271,10 +271,10 @@ class _IssueDetailsState extends State<IssueDetails> {
   Widget _buildButtonAce(BuildContext context, String text,requestData) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ClientIssueDetails()),
-        );
+        // Navigator.push(
+        //   context,
+        //   // MaterialPageRoute(builder: (context) => const ClientIssueDetailsHistory()),
+        // );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF001E62),

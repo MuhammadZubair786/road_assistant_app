@@ -148,172 +148,174 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Container(
-            height: 120,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.center,
-                colors: [Color(0xFF001E62), Colors.white],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            Container(
+              height: 120,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.center,
+                  colors: [Color(0xFF001E62), Colors.white],
+                ),
               ),
-            ),
-            child: const Center(
-              child: Text(
-                "Register",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              child: const Center(
+                child: Text(
+                  "Register",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: "Enter your email",
-                      prefixIcon: Icon(Icons.email, color: Color(0xFF001E62)),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: "Enter your email",
+                        prefixIcon: Icon(Icons.email, color: Color(0xFF001E62)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      enabled: !_isLoading,
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    enabled: !_isLoading,
-                  ),
-                  const SizedBox(height: 15),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      hintText: "Enter your password",
-                      prefixIcon: Icon(Icons.lock, color: Color(0xFF001E62)),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Color(0xFF001E62),
+                    const SizedBox(height: 15),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        hintText: "Enter your password",
+                        prefixIcon: Icon(Icons.lock, color: Color(0xFF001E62)),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Color(0xFF001E62),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
                       ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                      enabled: !_isLoading,
                     ),
-                    enabled: !_isLoading,
-                  ),
-                  const SizedBox(height: 15),
-                  TextField(
-                    controller: _confirmPasswordController,
-                    obscureText: _obscureConfirmPassword,
-                    decoration: InputDecoration(
-                      hintText: "Enter your Confirm password",
-                      prefixIcon: Icon(Icons.lock, color: Color(0xFF001E62)),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureConfirmPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Color(0xFF001E62),
+                    const SizedBox(height: 15),
+                    TextField(
+                      controller: _confirmPasswordController,
+                      obscureText: _obscureConfirmPassword,
+                      decoration: InputDecoration(
+                        hintText: "Enter your Confirm password",
+                        prefixIcon: Icon(Icons.lock, color: Color(0xFF001E62)),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Color(0xFF001E62),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword = !_obscureConfirmPassword;
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureConfirmPassword = !_obscureConfirmPassword;
-                          });
-                        },
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
                       ),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                      enabled: !_isLoading,
                     ),
-                    enabled: !_isLoading,
-                  ),
-                  const SizedBox(height: 15),
-                  const Text("User Type"),
-                  Row(
-                    children: [
-                      Radio(
-                        value: "User",
-                        groupValue: userType,
-                        onChanged: _isLoading
+                    const SizedBox(height: 15),
+                    const Text("User Type"),
+                    Row(
+                      children: [
+                        Radio(
+                          value: "User",
+                          groupValue: userType,
+                          onChanged: _isLoading
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    userType = value.toString();
+                                  });
+                                },
+                        ),
+                        const Text("User"),
+                        Radio(
+                          value: "Company",
+                          groupValue: userType,
+                          onChanged: _isLoading
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    userType = value.toString();
+                                  });
+                                },
+                        ),
+                        const Text("Company"),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _register,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF001E62),
+                        ),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                "Register",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: GestureDetector(
+                        onTap: _isLoading
                             ? null
-                            : (value) {
-                                setState(() {
-                                  userType = value.toString();
-                                });
+                            : () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => loginOnly(),
+                                  ),
+                                );
                               },
+                        child: const Text("Already have an account? Sign In"),
                       ),
-                      const Text("User"),
-                      Radio(
-                        value: "Company",
-                        groupValue: userType,
-                        onChanged: _isLoading
-                            ? null
-                            : (value) {
-                                setState(() {
-                                  userType = value.toString();
-                                });
-                              },
-                      ),
-                      const Text("Company"),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _isLoading ? null : _register,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF001E62),
-                      ),
-                      child: _isLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : const Text(
-                              "Register",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: GestureDetector(
-                      onTap: _isLoading
-                          ? null
-                          : () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => loginOnly(),
-                                ),
-                              );
-                            },
-                      child: const Text("Already have an account? Sign In"),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

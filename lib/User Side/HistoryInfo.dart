@@ -127,42 +127,135 @@ class _HistoryInformationState extends State<HistoryInformation> {
                   buildInfo(
                       "Contact No", widget.requestData['contact_no'] ?? "N/A"),
                   const SizedBox(height: 30),
-                 widget.requestData["status"] =="accepted"  ?
-                  Center(
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FeedbackScreen(),
+                  widget.requestData["status"] == "accepted"
+                      ? Center(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  showRequestDialog(
+                                    context,
+                                    widget.requestData,
+                                    () {
+                                      updateRequest(  widget.requestData["_id"]);
+                                      // handle accept logic
+                                    },
+                                  );
+
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => FeedbackScreen(requestData: widget.requestData,),
+                                  //   ),
+                                  // );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF001E62),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                ),
+                                child: const Text(
+                                  "Update Status",
+                                  style: TextStyle(
+                                      fontSize: 16, color: Colors.white),
+                                ),
                               ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF001E62),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 15),
                           ),
-                          child: const Text(
-                            "Give Feedback",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ):const SizedBox.shrink(),
+                        )
+                      : const SizedBox.shrink(),
+                  SizedBox(
+                    height: 20,
+                  ),
                   const SizedBox(height: 20),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  updateRequest(requestId) async {
+    await FirebaseFirestore.instance
+        .collection('requests')
+        .doc(requestId)
+        .update({
+      "status": "completed",
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Thanks For Using This Company Service!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+  }
+
+   // ignore: non_constant_identifier_names
+   RejectRequest(requestId) async {
+    await FirebaseFirestore.instance
+        .collection('requests')
+        .doc(requestId)
+        .update({
+      "status": "completed",
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Feedback submitted successfully!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+  }
+
+  void showRequestDialog(
+    BuildContext context,
+    requestData,
+    VoidCallback onAccept,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Request Update'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              // ignore: prefer_interpolation_to_compose_strings
+              "selected vehicle : " +requestData["selected_vehicle"],
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+             "selected service : "+ requestData["selected_service"],
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              RejectRequest(requestData["_id"]);
+              
+            }, // Cancel button
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              //  updateRequest(requestData["_id"]); // Close dialog
+              onAccept(); // Call accept function
+            },
+            child: const Text('Accept'),
+          ),
+        ],
       ),
     );
   }

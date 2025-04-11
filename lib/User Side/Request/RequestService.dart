@@ -187,7 +187,7 @@ class _RequestServiceScreenState extends State<RequestServiceScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
+          // const SizedBox(height: 20),
           IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () {
