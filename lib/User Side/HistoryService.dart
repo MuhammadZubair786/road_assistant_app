@@ -1,5 +1,5 @@
-import 'package:firebase_app/lib/User%20Side/HistoryInfo.dart';
-import 'package:firebase_app/lib/User%20Side/side_drawer.dart';
+import 'package:firebase_app/User%20Side/HistoryInfo.dart';
+import 'package:firebase_app/User%20Side/side_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,6 +12,8 @@ class ServiceHistory extends StatefulWidget {
 
 class _ServiceHistoryState extends State<ServiceHistory> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
   @override
   void initState() {
@@ -28,6 +30,8 @@ class _ServiceHistoryState extends State<ServiceHistory> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: SideDrawer(),
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,9 +51,10 @@ class _ServiceHistoryState extends State<ServiceHistory> with SingleTickerProvid
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  icon: const Icon(Icons.menu, color: Colors.white),
+
                   onPressed: () {
-                  
+                    _scaffoldKey.currentState?.openDrawer();
                   }
                 ),
               ),
@@ -71,7 +76,9 @@ class _ServiceHistoryState extends State<ServiceHistory> with SingleTickerProvid
            TabBar(
                   controller: _tabController,
                   // labelColor: Colors.white,
-                
+                  isScrollable: true,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorWeight: 5,
             tabs: const [
               Tab(text: 'Pending'),
               Tab(text: 'Accepted'),
@@ -176,19 +183,9 @@ Widget buildServiceCard(BuildContext context, Map<String, dynamic> service,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Color(0xFF001E62),
-                child: Icon(icon, size: 32, color: Colors.white),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+           Row(
+               crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Icon(Icons.access_time_filled,
                             size: 16, color: Colors.black),
@@ -200,7 +197,21 @@ Widget buildServiceCard(BuildContext context, Map<String, dynamic> service,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: Color(0xFF001E62),
+                child: Icon(icon, size: 32, color: Colors.white),
+              ),
+              const SizedBox(width: 12),
+              
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                                       const SizedBox(height: 4),
                     Text(
                       title,
                       style: const TextStyle(

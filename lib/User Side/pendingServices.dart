@@ -1,4 +1,4 @@
-import 'package:firebase_app/lib/User%20Side/HistoryInfo.dart';
+import 'package:firebase_app/User%20Side/HistoryInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

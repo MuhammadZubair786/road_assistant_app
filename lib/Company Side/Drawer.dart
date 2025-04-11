@@ -1,5 +1,5 @@
-import 'package:firebase_app/lib/Company%20Side/Location_Picker.dart';
-import 'package:firebase_app/lib/Company%20Side/issue_details.dart';
+import 'package:firebase_app/Company%20Side/Location_Picker.dart';
+import 'package:firebase_app/Company%20Side/issue_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -111,14 +111,14 @@ class _CompanyDrawerState extends State<CompanyDrawer> {
                     title: "Service Requests",
                     destination: ServiceProvide(),
                   ),
-                  buildMenuItem(
-                    context,
-                    iconPath: 'assets/client_issue.png',
-                    title: "Client Issue Details",
-                    destination: IssueDetails(
-                      requestData: {},
-                    ),
-                  ),
+                  // buildMenuItem(
+                  //   context,
+                  //   iconPath: 'assets/client_issue.png',
+                  //   title: "Client Issue Details",
+                  //   destination: IssueDetails(
+                  //     requestData: {},
+                  //   ),
+                  // ),
                   buildMenuItem(
                     context,
                     iconPath: 'assets/manage_loc.png',

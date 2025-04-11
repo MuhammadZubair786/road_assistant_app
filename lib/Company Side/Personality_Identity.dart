@@ -282,7 +282,7 @@ Widget _buildArrowButton(
         Navigator.push(
           context, // ✅ Pass the correct context
           MaterialPageRoute(
-              builder: (context) => const IssueDetails(
+              builder: (context) =>  IssueDetails(
                     requestData: {},
                   )),
         );

@@ -1,4 +1,4 @@
-import 'package:firebase_app/lib/VerificationCodeForget.dart';
+import 'package:firebase_app/VerificationCodeForget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

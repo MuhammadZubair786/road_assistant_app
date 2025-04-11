@@ -1,4 +1,4 @@
-import 'package:firebase_app/lib/User%20Side/service_card2.dart';
+import 'package:firebase_app/User%20Side/service_card2.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Notification.dart';
@@ -16,9 +16,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 50,
-            ),
+          
             Container(
               height: 100,
               decoration: const BoxDecoration(

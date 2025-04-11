@@ -150,14 +150,14 @@ class _ServiceProvideState extends State<ServiceProvide> {
   Widget _serviceCard(String title, IconData icon) {
     bool isSelected = selectedService == title;
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedService = title;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Selected: $title")),
-        );
-      },
+      // onTap: () {
+      //   setState(() {
+      //     selectedService = title;
+      //   });
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(content: Text("Selected: $title")),
+      //   );
+      // },
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -172,8 +172,8 @@ class _ServiceProvideState extends State<ServiceProvide> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              Icon(isSelected ? Icons.check_circle : Icons.circle_outlined,
-                  color: isSelected ? Colors.green : Colors.grey),
+              Icon(Icons.check_circle,
+                  color:Colors.green ),
             ],
           ),
         ),

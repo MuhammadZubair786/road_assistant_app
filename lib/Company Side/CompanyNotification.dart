@@ -1,4 +1,4 @@
-import 'package:firebase_app/lib/Company%20Side/Drawer.dart';
+import 'package:firebase_app/Company%20Side/Drawer.dart';
 import 'package:flutter/material.dart';
 
 class CompanyNotificationsScreen extends StatelessWidget {

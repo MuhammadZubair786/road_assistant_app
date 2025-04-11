@@ -1,4 +1,4 @@
-import 'package:firebase_app/lib/Company%20Side/client_issue_details.dart';
+import 'package:firebase_app/Company%20Side/client_issue_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -75,7 +75,7 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  isAvailable ?   _buildRequestList():const SizedBox.shrink(),
+                    isAvailable ? _buildRequestList() : const SizedBox.shrink(),
                     SizedBox(height: 20),
                   ],
                 ),
@@ -221,7 +221,7 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
             color: Color(0xFF001E62), borderRadius: BorderRadius.circular(12)),
-        child: Center(
+        child: const Center(
           child: Text("EeZee Tow",
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -236,10 +236,10 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
   Widget _buildRequestList() {
     String uid = FirebaseAuth.instance.currentUser?.uid ?? "";
     return StreamBuilder<QuerySnapshot>(
-       stream: FirebaseFirestore.instance
+      stream: FirebaseFirestore.instance
           .collection('requests')
-           .where('company_id', isEqualTo: uid)
-          .orderBy('timestamp', descending: true)
+          .where('companyId', isEqualTo: uid)
+          .where("status",isEqualTo: "pending")
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -348,8 +348,8 @@ class BuildRequestCard extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => IssueDetails(
-                            requestData: {},
+                          builder: (context) =>  IssueDetails(
+                            requestData: requestData,
                           ),
                         ),
                       );
@@ -382,31 +382,27 @@ class BuildRequestCard extends StatelessWidget {
 
       // Add to the accepted_services collection
       await FirebaseFirestore.instance
-          .collection('Company')
-          .doc("YOUR_COMPANY_ID") // Replace with your company ID
-          .collection('accepted_services')
-          .add({
-        'car_no': data['car_no'],
-        'selected_vehicle': data['selected_vehicle'],
-        'car_color': data['car_color'],
-        'selected_service': data['selected_service'],
-        'car_no': data['car_no'],
+          .collection('requests')
+          .doc(requestId) // Replace with your company ID
+          .update({
+        "status": "accepted",
         'timestamp': FieldValue.serverTimestamp(),
       });
       // Update the request status to 'accepted'
-      await FirebaseFirestore.instance
-          .collection('requests')
-          .doc(requestId)
-          .update({'status': 'accepted'});
+      // await FirebaseFirestore.instance
+      //     .collection('requests')
+      //     .doc(requestId)
+      //     .update({'status': 'accepted'});
 
       // Delete the request from the current list
-      await FirebaseFirestore.instance
-          .collection('requests')
-          .doc(requestId)
-          .delete();
+      // await FirebaseFirestore.instance
+      //     .collection('requests')
+      //     .doc(requestId)
+      //     .delete();
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
             content: Text("Request accepted and moved to service history")),
       );
     }
@@ -417,7 +413,10 @@ class BuildRequestCard extends StatelessWidget {
     await FirebaseFirestore.instance
         .collection('requests')
         .doc(requestId)
-        .delete();
+        .update({
+          "status":"rejected"
+        });
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("Request removed")),
     );

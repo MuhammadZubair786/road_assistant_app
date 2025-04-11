@@ -2,9 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'client_issue_details.dart';
 
-class IssueDetails extends StatelessWidget {
-  const IssueDetails({super.key, required Map<String, dynamic> requestData});
+class IssueDetails extends StatefulWidget {
+  var requestData;
+   IssueDetails({super.key, required Map<String, dynamic> requestData});
 
+  @override
+  State<IssueDetails> createState() => _IssueDetailsState();
+}
+
+class _IssueDetailsState extends State<IssueDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +33,7 @@ class IssueDetails extends StatelessWidget {
                 _buildCard(
                   title: "Vehicle Details",
                   children: [
-                    _buildDetailRow("Vehicle Owner", issueData['car_no']),
+                    _buildDetailRow("Vehicle Owner",widget.requestData['car_no']),
                     _buildDetailRow(
                         "Vehicle Type", issueData['selected_service']),
                     _buildDetailRow(
