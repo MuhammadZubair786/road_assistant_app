@@ -178,22 +178,22 @@ class _LoginOnlyState extends State<loginOnly> {
     }
     try {
       // Get current position
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.low);
-      print("Company Location: ${position.latitude}, ${position.longitude}");
-      // Get address from coordinates
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      Placemark place = placemarks.first;
-      // Format the addressString companyAddress
-      String companyAddress =
-          " ${place.name ?? 'Unknown Locality'},  ${place.locality ?? 'Unknown Locality'}, ${place.country ?? 'Unknown Country'}";
-      print("Company Address: $companyAddress");
+      // Position position = await Geolocator.getCurrentPosition(
+      //     desiredAccuracy: LocationAccuracy.low);
+      // print("Company Location: ${position.latitude}, ${position.longitude}");
+      // // Get address from coordinates
+      // List<Placemark> placemarks =
+      //     await placemarkFromCoordinates(position.latitude, position.longitude);
+      // Placemark place = placemarks.first;
+      // // Format the addressString companyAddress
+      // String companyAddress =
+      //     " ${place.name ?? 'Unknown Locality'},  ${place.locality ?? 'Unknown Locality'}, ${place.country ?? 'Unknown Country'}";
+      // print("Company Address: 123");
       // Navigate to HomeTab with the address
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => Hometab(companyAddress: companyAddress),
+          builder: (context) => Hometab(companyAddress: "usa"),
         ),
       );
     } catch (e) {

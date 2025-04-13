@@ -43,39 +43,62 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     }
   }
 
-  Future<void> _submitFeedback() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+Future<void> submitFeedback() async {
+  final user = FirebaseAuth.instance.currentUser;
+  final requestId = widget.requestData["_id"];
 
-    try {
-      await FirebaseFirestore.instance.collection('Feedback').add({
-        'userId': user.uid, // Store user ID
-        'companyName': companyName,
-        'companyAddress': companyAddress,
-        'rating': _rating,
-        'comment': _commentController.text.trim(),
-        'timestamp': FieldValue.serverTimestamp(), // Store timestamp
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Feedback submitted successfully!"),
-          backgroundColor: Colors.green,
-        ),
-      );
+  if (user == null) return;
+
+  // Check if feedback already exists for this requestId by this user
+  final querySnapshot = await FirebaseFirestore.instance
+      .collection('Feedback')
+      .where('userId', isEqualTo: user.uid)
+      .where('requestId', isEqualTo: requestId)
+      .get();
+
+  if (querySnapshot.docs.isEmpty) {
+    // No feedback yet – allow submitting
+    await FirebaseFirestore.instance.collection('Feedback').add({
+      'userId': user.uid,
+      'requestId': requestId,
+      'companyName': widget.requestData["companyName"],
+      'companyAddress': widget.requestData["companyAddress"], // Fixed copy/paste issue
+      'rating': _rating,
+      'comment': _commentController.text.trim(),
+      'timestamp': FieldValue.serverTimestamp(),
+    });
+
+    // Optional: Show success message or redirect
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Feedback submitted successfully",
+      
+      ),
+       backgroundColor: Colors.green
+      ),
+    );
+      // ignore: use_build_context_synchronously
+       Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+
+  } else {
+    // Feedback already exists – block submission
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("You've already submitted feedback for this request."),
+       backgroundColor: Colors.red
+      
+      ),
+      
+      
+    );
       Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Error submitting feedback: $e"),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +220,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _submitFeedback,
+                  onPressed: submitFeedback,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF001E62),
                     shape: RoundedRectangleBorder(

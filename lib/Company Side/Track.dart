@@ -19,7 +19,7 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -31,20 +31,25 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
         children: [
           _buildHeader(context),
           TabBar(
+            isScrollable: true,
             controller: _tabController,
             labelColor: Colors.black,
             indicatorColor: Colors.black,
-            tabs: [
+            tabs: const [
               Tab(text: "Service Requests"),
+               Tab(text: "Active Request"),
               Tab(text: "Service History"),
             ],
           ),
           Expanded(
             child: TabBarView(
+          
               controller: _tabController,
               children: [
                 _buildServiceRequestList(),
+              _buildServiceCurrent(),
                 _buildServiceHistory(),
+
               ],
             ),
           ),
@@ -94,14 +99,13 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
         stream: FirebaseFirestore.instance
             .collection('requests') // Updated to match RequestConfirmation
             .where("status",isEqualTo: "pending")
-            .orderBy('timestamp', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text("No service requests available."));
+            return const Center(child: Text("No pending service requests available."));
           }
           var serviceRequests = snapshot.data!.docs;
           return ListView.builder(
@@ -184,6 +188,72 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
       child:  StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('requests') // Updated to match RequestConfirmation
+            .where("status",isEqualTo: "completed")
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text("No completed service history available."));
+          }
+
+          var services = snapshot.data!.docs;
+
+          return ListView.builder(
+            itemCount: services.length,
+            itemBuilder: (context, index) {
+              var service = services[index].data() as Map<String, dynamic>;
+              var carNo = service['car_no'] ?? 'Unknown';
+              var selectedVehicle = service['selected_vehicle'] ?? 'Unknown';
+              var vehicleColor = service['Vehicle_color'] ?? 'Unknown';
+              var selectedService = service['selected_service'] ?? 'Unknown';
+              var vehicleNo = service['Vehicle_no'] ?? 'Unknown';
+              var timestamp = service['timestamp'] as Timestamp?;
+              String formattedDate = timestamp != null
+                  ? "${timestamp.toDate().toLocal()}"
+                  : "Unknown time";
+
+              return GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>IssueDetailsHistory(requestData: service,)));
+
+                },
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(carNo,
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                            "$selectedVehicle | $vehicleColor | $selectedService | $vehicleNo"),
+                        SizedBox(height: 10),
+                        Text(formattedDate,
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+
+  Widget _buildServiceCurrent() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child:  StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('requests') // Updated to match RequestConfirmation
             .where("status",isEqualTo: "accepted")
             .snapshots(),
         builder: (context, snapshot) {
@@ -191,7 +261,7 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
             return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text("No service history available."));
+            return const Center(child: Text("No current service history available."));
           }
 
           var services = snapshot.data!.docs;

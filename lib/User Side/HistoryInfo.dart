@@ -140,7 +140,7 @@ class _HistoryInformationState extends State<HistoryInformation> {
                                     context,
                                     widget.requestData,
                                     () {
-                                      updateRequest(  widget.requestData["_id"]);
+                                      updateRequest(  widget.requestData["_id"],widget.requestData);
                                       // handle accept logic
                                     },
                                   );
@@ -183,7 +183,7 @@ class _HistoryInformationState extends State<HistoryInformation> {
     );
   }
 
-  updateRequest(requestId) async {
+  updateRequest(requestId,requestdata) async {
     await FirebaseFirestore.instance
         .collection('requests')
         .doc(requestId)
@@ -197,6 +197,7 @@ class _HistoryInformationState extends State<HistoryInformation> {
           backgroundColor: Colors.green,
         ),
       );
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>FeedbackScreen(requestData: requestdata)));
   }
 
    // ignore: non_constant_identifier_names
@@ -243,7 +244,8 @@ class _HistoryInformationState extends State<HistoryInformation> {
         actions: [
           TextButton(
             onPressed: () {
-              RejectRequest(requestData["_id"]);
+              Navigator.pop(context);
+              // RejectRequest(requestData["_id"]);
               
             }, // Cancel button
             child: const Text('Cancel'),
@@ -253,7 +255,7 @@ class _HistoryInformationState extends State<HistoryInformation> {
               //  updateRequest(requestData["_id"]); // Close dialog
               onAccept(); // Call accept function
             },
-            child: const Text('Accept'),
+            child: const Text('Complete'),
           ),
         ],
       ),

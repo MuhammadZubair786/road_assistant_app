@@ -227,16 +227,19 @@ class _IssueDetailsState extends State<IssueDetails> {
 
   void _deleteRequest(BuildContext context,requestId) async {
    
-    await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
         .collection('requests')
         .doc(requestId)
         .update({
-          "status":"rejected"
+          "status":"rejected",
+          'timestamp': FieldValue.serverTimestamp(),
+         "_id":requestId
         });
-
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("Request removed")),
     );
+    Navigator.pop(context);
   }
 
   Widget _buildButtons(BuildContext context,requestData) {
@@ -270,11 +273,27 @@ class _IssueDetailsState extends State<IssueDetails> {
 
   Widget _buildButtonAce(BuildContext context, String text,requestData) {
     return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ClientIssueDetails()),
-        );
+      onPressed: () async {
+
+          await FirebaseFirestore.instance
+          .collection('requests')
+          .doc(requestData["_id"]) // Replace with your company ID
+          .update({
+        "status": "accepted",
+        'timestamp': FieldValue.serverTimestamp(),
+         "_id":requestData["_id"]
+      });
+     
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text("Request accepted and moved to service history")),
+      );
+      Navigator.pop(context);
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const ClientIssueDetails()),
+        // );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF001E62),
