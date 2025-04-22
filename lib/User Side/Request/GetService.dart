@@ -1,5 +1,5 @@
-import 'package:firebase_app/User%20Side/home_screen.dart';
-import 'package:firebase_app/User%20Side/service_card.dart';
+import 'package:roadside_assistance/User%20Side/home_screen.dart';
+import 'package:roadside_assistance/User%20Side/service_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

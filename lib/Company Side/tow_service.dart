@@ -1,4 +1,4 @@
-import 'package:firebase_app/Company%20Side/client_issue_details.dart';
+import 'package:roadside_assistance/Company%20Side/client_issue_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

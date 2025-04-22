@@ -1,4 +1,4 @@
-import 'package:firebase_app/User%20Side/service_card2.dart';
+import 'package:roadside_assistance/User%20Side/service_card2.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Notification.dart';
