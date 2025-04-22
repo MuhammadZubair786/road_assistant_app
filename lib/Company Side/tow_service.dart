@@ -345,6 +345,8 @@ class BuildRequestCard extends StatelessWidget {
                       var requestData =
                           requestDoc.data() as Map<String, dynamic>;
 
+                          requestData["_id"]=requestId;
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -404,7 +406,9 @@ class BuildRequestCard extends StatelessWidget {
         .collection('requests')
         .doc(requestId)
         .update({
-          "status":"rejected"
+          "status":"rejected",
+          'timestamp': FieldValue.serverTimestamp(),
+         "_id":requestId
         });
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
