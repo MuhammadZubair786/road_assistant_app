@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roadside_assistance/Company%20Side/CompanyNotification.dart';
 import 'package:roadside_assistance/Company%20Side/Drawer.dart';
 import 'package:roadside_assistance/Company%20Side/client_issue_details.dart';
@@ -98,6 +99,7 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('requests') // Updated to match RequestConfirmation
+            .where("companyId",isEqualTo:FirebaseAuth.instance.currentUser!.uid )
             .where("status",isEqualTo: "pending")
             .snapshots(),
         builder: (context, snapshot) {
@@ -188,6 +190,7 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
       child:  StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('requests') // Updated to match RequestConfirmation
+            .where("companyId",isEqualTo:FirebaseAuth.instance.currentUser!.uid )
             .where("status",isEqualTo: "completed")
             .snapshots(),
         builder: (context, snapshot) {
@@ -254,6 +257,7 @@ class _TrackState extends State<Track> with SingleTickerProviderStateMixin {
       child:  StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('requests') // Updated to match RequestConfirmation
+            .where("companyId",isEqualTo:FirebaseAuth.instance.currentUser!.uid )
             .where("status",isEqualTo: "accepted")
             .snapshots(),
         builder: (context, snapshot) {

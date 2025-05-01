@@ -88,17 +88,11 @@ class _LoginOnlyState extends State<loginOnly> {
 
       String userType = userData['userType'];
       print("User type retrieved: $userType");
-      
 
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool("User", true);
       await prefs.setString("userType", userType);
       await prefs.setString("uid", uid);
-
-      
-
-
-
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -109,9 +103,10 @@ class _LoginOnlyState extends State<loginOnly> {
 
       // Navigate based on user type
       if (userType == "User") {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen()),
+          (route) => false,
         );
       } else if (userType == "Company") {
         _getCompanyLocationAndLogin(userCredential);
@@ -190,11 +185,13 @@ class _LoginOnlyState extends State<loginOnly> {
       //     " ${place.name ?? 'Unknown Locality'},  ${place.locality ?? 'Unknown Locality'}, ${place.country ?? 'Unknown Country'}";
       // print("Company Address: 123");
       // Navigate to HomeTab with the address
-      Navigator.pushReplacement(
+
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (context) => Hometab(companyAddress: "usa"),
         ),
+        (route) => false,
       );
     } catch (e) {
       print("Error fetching location: $e");
@@ -247,7 +244,8 @@ class _LoginOnlyState extends State<loginOnly> {
                         controller: _emailController,
                         decoration: InputDecoration(
                           hintText: "Enter your Email",
-                          prefixIcon: Icon(Icons.email, color: Color(0xFF001E62)),
+                          prefixIcon:
+                              Icon(Icons.email, color: Color(0xFF001E62)),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
                         ),
@@ -260,7 +258,8 @@ class _LoginOnlyState extends State<loginOnly> {
                         obscureText: _isObscure,
                         decoration: InputDecoration(
                           hintText: "Enter your Password",
-                          prefixIcon: Icon(Icons.lock, color: Color(0xFF001E62)),
+                          prefixIcon:
+                              Icon(Icons.lock, color: Color(0xFF001E62)),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _isObscure

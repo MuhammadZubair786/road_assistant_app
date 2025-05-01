@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -133,6 +134,29 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
     );
   }
 
+  void initState() {
+    super.initState();
+    getCompanyByAccount();
+  }
+
+  var userdata;
+
+  Future<void> getCompanyByAccount() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('Company')
+        .doc(FirebaseAuth
+            .instance.currentUser!.uid) // only if accountId is the document ID
+        .get();
+
+    if (doc.exists) {
+      print(doc.data());
+      userdata = doc.data();
+      setState(() {});
+    } else {
+      print('No document found.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,29 +165,19 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(
             height: 120,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [Color(0xFF001E62), Colors.white],
               ),
             ),
-            child: Stack(
-              alignment: AlignmentDirectional.center,
+            child: const Column(
               children: [
-                AppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.black, size: 35),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-                Positioned(
-                  top: 95,
-                  left: 20,
+                SizedBox(height: 50,),
+                Center(
                   child: Text(
-                    "Personal Identity",
+                    "Profile Details",
                     textAlign: TextAlign.start,
                     style: TextStyle(
                       fontSize: 20,
@@ -174,95 +188,95 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
                 ),
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            child: Text(
-              "Please fill the identity for reasons to data for us",
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[400]),
+          ),Center(
+            child: CircleAvatar(
+              radius: 40, // Fixed size for clean, consistent design
+              backgroundImage: NetworkImage(userdata["imageUrl"]),
             ),
-          ),
-          _buildTextField("Branch", branchController),
-          _buildTextField("Branch Address", branchAddressController),
+          )
+,
+
+          RowData("Bussiness Name", userdata["name"]),
+          RowData("Address", userdata["address"]),
+          RowData("Contact", userdata["contact"]),
+
+          RowData("Account Type", userdata["userType"]),
           // Location Picker
-          TextField(
-            controller: locationController,
-            decoration: InputDecoration(
-              labelText: "Choose Location From map",
-              prefixIcon: Icon(Icons.home),
-              suffixIcon: IconButton(
-                icon: Icon(Icons.location_on, color: Color(0xFF001E62)),
-                onPressed: _pickLocation,
-              ),
-            ),
-          ),
+          // TextField(
+          //   controller: locationController,
+          //   decoration: InputDecoration(
+          //     labelText: "Choose Location From map",
+          //     prefixIcon: Icon(Icons.home),
+          //     suffixIcon: IconButton(
+          //       icon: Icon(Icons.location_on, color: Color(0xFF001E62)),
+          //       onPressed: _pickLocation,
+          //     ),
+          //   ),
+          // ),
 
-          _buildTextField("Number of Employees", employeesController),
-          _buildTextField("Legal Number", legalNumberController),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-            child: Text('Upload legalization letter here',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            child: GestureDetector(
-              onTap: _pickFile,
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3))
-                  ],
-                ),
-                child: Center(
-                    child: Text("Choose File",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold))),
-              ),
-            ),
-          ),
-          if (_selectedFile != null)
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Text("File selected successfully")),
+          // _buildTextField("Number of Employees", employeesController),
+          // _buildTextField("Legal Number", legalNumberController),
+          // // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+          //   child: Text('Upload legalization letter here',
+          //       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          //   child: GestureDetector(
+          //     onTap: _pickFile,
+          //     child: Container(
+          //       height: 50,
+          //       decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         borderRadius: BorderRadius.circular(12),
+          //         boxShadow: [
+          //           BoxShadow(
+          //               color: Colors.grey.withOpacity(0.5),
+          //               spreadRadius: 2,
+          //               blurRadius: 5,
+          //               offset: Offset(0, 3))
+          //         ],
+          //       ),
+          //       child: Center(
+          //           child: Text("Choose File",
+          //               style: TextStyle(
+          //                   fontSize: 16, fontWeight: FontWeight.bold))),
+          //     ),
+          //   ),
+          // ),
+          // if (_selectedFile != null)
+          //   Padding(
+          //       padding: EdgeInsets.all(10),
+          //       child: Text("File selected successfully")),
 
-          SizedBox(height: 50),
-          Center(
-            child: ElevatedButton(
-              onPressed: _saveDataToFirestore,
-              child: Text(
-                "Submit",
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600),
-              ),
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: Color(0xFF001E62)),
-            ),
-          ),
+          // SizedBox(height: 50),
+          // Center(
+          //   child: ElevatedButton(
+          //     onPressed: _saveDataToFirestore,
+          //     child: Text(
+          //       "Submit",
+          //       style: TextStyle(
+          //           fontSize: 20,
+          //           color: Colors.white,
+          //           fontWeight: FontWeight.w600),
+          //     ),
+          //     style:
+          //         ElevatedButton.styleFrom(backgroundColor: Color(0xFF001E62)),
+          //   ),
+          // ),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              // _buildArrowButton(
-              //     context, Icons.arrow_back, Colors.grey[300]!, Colors.black),
-              // ✅ Pass context
-              const SizedBox(width: 10),
-              _buildArrowButton(context, Icons.arrow_forward,
-                  const Color(0xFF001E62), Colors.white),
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //   children: [
+          //     // _buildArrowButton(
+          //     //     context, Icons.arrow_back, Colors.grey[300]!, Colors.black),
+          //     // ✅ Pass context
+          //     const SizedBox(width: 10),
+          //     _buildArrowButton(context, Icons.arrow_forward,
+          //         const Color(0xFF001E62), Colors.white),
+          //   ],
+          // ),
         ]),
       ),
     );
@@ -282,11 +296,41 @@ Widget _buildArrowButton(
         Navigator.push(
           context, // ✅ Pass the correct context
           MaterialPageRoute(
-              builder: (context) =>  IssueDetails(
+              builder: (context) => IssueDetails(
                     requestData: {},
                   )),
         );
       },
+    ),
+  );
+}
+
+Widget RowData(String label, String value) {
+  return Container(
+    padding: EdgeInsets.symmetric(vertical: 8.0),
+    decoration: BoxDecoration(
+      border: Border(
+        bottom: BorderSide(color: Colors.grey.shade300, width: 1),
+      ),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            label,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            value,
+            style: TextStyle(color: Colors.black54, fontSize: 16),
+          ),
+        ),
+      ],
     ),
   );
 }

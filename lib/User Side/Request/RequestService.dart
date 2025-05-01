@@ -33,14 +33,26 @@ class _RequestServiceScreenState extends State<RequestServiceScreen> {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-          title: const Text('Select Your Vehicle',
-              style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Column(
+            children: [
+               Center(
+            child: Image.asset( 'assets/HelpSupport.png',
+            height: 50,
+            fit: BoxFit.cover,
+            )
+          ),
+          SizedBox(height: 30),
+              const Text('Select Your Vehicle',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              
               _buildVehicleOption('Car', 'assets/car.png'),
-              _buildVehicleOption('Motorcycle', 'assets/motorcycle.png'),
-              _buildVehicleOption('Rickshaw', 'assets/rickshaw.png'),
+              _buildVehicleOption('Van', 'assets/motorcycle.png'),
+              _buildVehicleOption('Truck', 'assets/rickshaw.png'),
             ],
           ),
         );
@@ -75,27 +87,35 @@ class _RequestServiceScreenState extends State<RequestServiceScreen> {
    
 
     var  fetchedServices = {
-  'Car': [
-    {"name": "Flat Tire", "icon": Icons.tire_repair},
-    {"name": "Towing Service", "icon": Icons.local_shipping},
-    {"name": "Engine Overheat", "icon": Icons.warning},
-    {"name": "Battery Jump", "icon": Icons.battery_charging_full},
-    {"name": "Key Lock", "icon": Icons.vpn_key},
-  ],
-  'Motorcycle': [
-    {"name": "Chain Issue", "icon": Icons.settings},
-    {"name": "Battery Dead", "icon": Icons.battery_alert},
-    {"name": "Puncture", "icon": Icons.build},
-    {"name": "Brake Failure", "icon": Icons.car_repair},
-    {"name": "Fuel Issue", "icon": Icons.local_gas_station},
-  ],
-  'Rickshaw': [
-    {"name": "Engine Problem", "icon": Icons.engineering},
-    {"name": "Wheel Jam", "icon": Icons.tire_repair},
-    {"name": "Low Battery", "icon": Icons.battery_alert},
-    {"name": "Brake Issue", "icon": Icons.car_repair},
-    {"name": "Oil Leak", "icon": Icons.oil_barrel},
-  ],};
+   "Car": [
+      {"name": "Towing Service", "icon": Icons.local_shipping},
+      {"name": "Flat Tire", "icon": Icons.tire_repair},
+      {"name": "Battery Jump Start", "icon": Icons.battery_charging_full},
+      {"name": "Engine Overheating", "icon": Icons.warning},
+      {"name": "Brake Issue", "icon": Icons.car_repair},
+      {"name": "Oil Change", "icon": Icons.oil_barrel},
+      {"name": "AC Repair", "icon": Icons.ac_unit},
+    ],
+    "Van": [
+      {"name": "Towing Service", "icon": Icons.local_shipping},
+      {"name": "Flat Tire", "icon": Icons.tire_repair},
+      {"name": "Chain Adjustment", "icon": Icons.build},
+      {"name": "Battery Issue", "icon": Icons.battery_alert},
+      {"name": "Engine Tune-Up", "icon": Icons.engineering},
+      {"name": "Brake Pad Change", "icon": Icons.settings},
+      {"name": "Clutch Repair", "icon": Icons.precision_manufacturing},
+      {"name": "Light Issue", "icon": Icons.lightbulb},
+    ],
+    "Truck": [
+        {"name": "Towing Service", "icon": Icons.local_shipping},
+      {"name": "Battery Problem", "icon": Icons.battery_alert},
+      {"name": "Flat Tire", "icon": Icons.tire_repair},
+      {"name": "Towing Service", "icon": Icons.local_shipping},
+      {"name": "Engine Repair", "icon": Icons.miscellaneous_services},
+      {"name": "Meter Issue", "icon": Icons.speed},
+      {"name": "Brake Problem", "icon": Icons.car_repair},
+      {"name": "Seat Repair", "icon": Icons.event_seat},
+    ],};
 
 
     setState(() {

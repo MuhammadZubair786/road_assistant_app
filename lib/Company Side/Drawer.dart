@@ -3,6 +3,7 @@ import 'package:roadside_assistance/Company%20Side/issue_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:roadside_assistance/LoginOnly.dart';
 import 'CompanyFeedbackScreen.dart';
 import 'CompanyNotification.dart';
 import '../User Side/Register.dart';
@@ -231,7 +232,7 @@ class _CompanyDrawerState extends State<CompanyDrawer> {
                 Navigator.of(context).pop();
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => RegistrationScreen()),
+                  MaterialPageRoute(builder: (context) => loginOnly()),
                 );
               },
               child: const Text("Yes, Logout",

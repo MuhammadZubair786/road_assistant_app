@@ -67,30 +67,52 @@ class _HometabState extends State<Hometab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            // _buildLocationHeader(),
-            Expanded(child: _pages[_selectedIndex]),
+    return WillPopScope(
+    onWillPop: () async {
+      bool shouldExit = await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Exit App'),
+          content: Text('Are you sure you want to exit the app?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text('Exit'),
+            ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Color(0xFF001E62),
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          _buildNavItem(Icons.home, "Home", 0),
-          _buildNavItem(Icons.home_repair_service, "Service", 1),
-          _buildNavItem(Icons.directions_car, "Track", 2),
-          _buildNavItem(Icons.person, "Profile", 3),
-        ],
+      );
+      return shouldExit;
+    },
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              // _buildLocationHeader(),
+              Expanded(child: _pages[_selectedIndex]),
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Color(0xFF001E62),
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            _buildNavItem(Icons.home, "Home", 0),
+            _buildNavItem(Icons.home_repair_service, "Service", 1),
+            _buildNavItem(Icons.directions_car, "Track", 2),
+            _buildNavItem(Icons.person, "Profile", 3),
+          ],
+        ),
       ),
     );
   }

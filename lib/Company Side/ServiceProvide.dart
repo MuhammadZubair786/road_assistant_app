@@ -14,15 +14,16 @@ class _ServiceProvideState extends State<ServiceProvide> {
   // ✅ Local services (no Firebase)
   Map<String, List<Map<String, dynamic>>> serviceOptions = {
     "Car": [
+      {"name": "Towing Service", "icon": Icons.local_shipping},
       {"name": "Flat Tire", "icon": Icons.tire_repair},
       {"name": "Battery Jump Start", "icon": Icons.battery_charging_full},
-      {"name": "Towing Service", "icon": Icons.local_shipping},
       {"name": "Engine Overheating", "icon": Icons.warning},
       {"name": "Brake Issue", "icon": Icons.car_repair},
       {"name": "Oil Change", "icon": Icons.oil_barrel},
       {"name": "AC Repair", "icon": Icons.ac_unit},
     ],
-    "MotorCycle": [
+    "Van": [
+      {"name": "Towing Service", "icon": Icons.local_shipping},
       {"name": "Flat Tire", "icon": Icons.tire_repair},
       {"name": "Chain Adjustment", "icon": Icons.build},
       {"name": "Battery Issue", "icon": Icons.battery_alert},
@@ -31,7 +32,8 @@ class _ServiceProvideState extends State<ServiceProvide> {
       {"name": "Clutch Repair", "icon": Icons.precision_manufacturing},
       {"name": "Light Issue", "icon": Icons.lightbulb},
     ],
-    "Rickshaw": [
+    "Truck": [
+        {"name": "Towing Service", "icon": Icons.local_shipping},
       {"name": "Battery Problem", "icon": Icons.battery_alert},
       {"name": "Flat Tire", "icon": Icons.tire_repair},
       {"name": "Towing Service", "icon": Icons.local_shipping},
@@ -98,8 +100,8 @@ class _ServiceProvideState extends State<ServiceProvide> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _serviceType("Car", "assets/car.png"),
-              _serviceType("MotorCycle", "assets/motorcycle.png"),
-              _serviceType("Rickshaw", "assets/rickshaw.png"),
+              _serviceType("Van", "assets/motorcycle.png"),
+              _serviceType("Truck", "assets/rickshaw.png"),
             ],
           ),
           const SizedBox(height: 20),
@@ -132,7 +134,7 @@ class _ServiceProvideState extends State<ServiceProvide> {
           Stack(
             alignment: Alignment.topRight,
             children: [
-              Image.asset(imagePath, width: 50, height: 50),
+              Image.asset(imagePath, width: 100, height: 50),
               if (isSelected)
                 const Icon(Icons.check_circle, color: Colors.green, size: 20),
             ],
