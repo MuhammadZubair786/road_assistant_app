@@ -1,5 +1,6 @@
 import 'package:firebase_app/User%20Side/HistoryInfo.dart';
 import 'package:firebase_app/User%20Side/side_drawer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -106,10 +107,12 @@ class _ServiceHistoryState extends State<ServiceHistory> with SingleTickerProvid
 
   // Function to fetch services based on status
   Widget _buildServiceList(String status) {
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('requests')
-          .where("status", isEqualTo: status)
+           .where("status", isEqualTo: status)
+          .where("user_id", isEqualTo: userId)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
