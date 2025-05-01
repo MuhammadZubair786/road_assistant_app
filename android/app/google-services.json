@@ -7,15 +7,15 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:693382005476:android:e8f9e16518c30a9d7da2f1",
+        "mobilesdk_app_id": "1:693382005476:android:af423285a5b4c76f7da2f1",
         "android_client_info": {
-          "package_name": "com.example.firebase_app"
+          "package_name": "com.triphelper.app"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCBc1iPv84x8TOY5N6uQSdIoI2MSucAang"
+          "current_key": "AIzaSyD1V_PE65TAImdgIaXYSpJ0lt9xkDxVmAY"
         }
       ],
       "services": {

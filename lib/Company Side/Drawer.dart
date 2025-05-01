@@ -1,5 +1,5 @@
-import 'package:firebase_app/Company%20Side/Location_Picker.dart';
-import 'package:firebase_app/Company%20Side/issue_details.dart';
+import 'package:roadside_assistance/Company%20Side/Location_Picker.dart';
+import 'package:roadside_assistance/Company%20Side/issue_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
