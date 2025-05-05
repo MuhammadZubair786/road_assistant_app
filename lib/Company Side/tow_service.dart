@@ -216,18 +216,42 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
 
   Widget _buildHeader() {
     return Stack(clipBehavior: Clip.none, children: [
-      Container(
-        height: 80,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            color: Color(0xFF001E62), borderRadius: BorderRadius.circular(12)),
-        child: const Center(
-          child: Text("EeZee Tow",
-              textAlign: TextAlign.center,
-              style: TextStyle(
+      Card(
+        elevation: 10,
+        color: Color(0xFF001E62),
+        child: Container(
+          height: 80,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: Colors.transparent, borderRadius: BorderRadius.circular(12),
+              border: Border.all(width: 1,color:  const Color(0xFF001E62),),
+              boxShadow: const [
+                BoxShadow(
                   color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold)),
+                  blurRadius: 10
+                )
+              ]
+              ),
+          child:  Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                 Image.asset(
+                      'assets/HelpSupport.png',
+                      fit: BoxFit.contain,
+                      width: 100,
+                    ),
+                    const SizedBox(width: 10,),
+                const Text("EeZee Tow",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color:  Color(0xFF001E62),
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
         ),
       ),
     ]);

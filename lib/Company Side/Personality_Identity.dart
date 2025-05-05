@@ -162,7 +162,10 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child:userdata==null ?
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: const Center(child: CircularProgressIndicator())): Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(
             height: 120,
             decoration: const BoxDecoration(
@@ -188,7 +191,8 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
                 ),
               ],
             ),
-          ),Center(
+          ),
+          Center(
             child: CircleAvatar(
               radius: 40, // Fixed size for clean, consistent design
               backgroundImage: NetworkImage(userdata["imageUrl"]),
