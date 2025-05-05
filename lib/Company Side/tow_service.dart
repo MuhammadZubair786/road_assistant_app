@@ -218,7 +218,7 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
     return Stack(clipBehavior: Clip.none, children: [
       Card(
         elevation: 10,
-        color: Color(0xFF001E62),
+        color: const Color(0xFF001E62),
         child: Container(
           height: 80,
           width: double.infinity,
