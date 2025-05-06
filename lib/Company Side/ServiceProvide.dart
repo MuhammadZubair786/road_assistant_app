@@ -13,36 +13,33 @@ class _ServiceProvideState extends State<ServiceProvide> {
 
   // ✅ Local services (no Firebase)
   Map<String, List<Map<String, dynamic>>> serviceOptions = {
-    "Car": [
-      {"name": "Towing Service", "icon": Icons.local_shipping},
-      {"name": "Flat Tire", "icon": Icons.tire_repair},
-      {"name": "Battery Jump Start", "icon": Icons.battery_charging_full},
-      {"name": "Engine Overheating", "icon": Icons.warning},
-      {"name": "Brake Issue", "icon": Icons.car_repair},
-      {"name": "Oil Change", "icon": Icons.oil_barrel},
-      {"name": "AC Repair", "icon": Icons.ac_unit},
+   "Car": [
+      {"name": "Towing Service", "icon": "assets/HelpSupport.png"},
+      {"name": "Flat Tire", "icon": "assets/flat_trye.png"},
+      {"name": "Battery Jump Start", "icon": "assets/batter_jump.png"},
+      {"name": "Engine Overheating", "icon":"assets/download (1).jfif"},
+      {"name": "Brake Issue", "icon": "assets/brak.png"},
+      {"name": "Oil Change", "icon": "assets/oil change.png"},
+      {"name": "AC Repair", "icon": "assets/ac.png"},
     ],
     "Van": [
-      {"name": "Towing Service", "icon": Icons.local_shipping},
-      {"name": "Flat Tire", "icon": Icons.tire_repair},
-      {"name": "Chain Adjustment", "icon": Icons.build},
-      {"name": "Battery Issue", "icon": Icons.battery_alert},
-      {"name": "Engine Tune-Up", "icon": Icons.engineering},
-      {"name": "Brake Pad Change", "icon": Icons.settings},
-      {"name": "Clutch Repair", "icon": Icons.precision_manufacturing},
-      {"name": "Light Issue", "icon": Icons.lightbulb},
+       {"name": "Towing Service", "icon": "assets/HelpSupport.png"},
+      {"name": "Flat Tire", "icon": "assets/flat_trye.png"},
+      {"name": "Battery Jump Start", "icon": "assets/batter_jump.png"},
+      {"name": "Engine Overheating", "icon":"assets/download (1).jfif"},
+      {"name": "Brake Issue", "icon": "assets/brak.png"},
+      {"name": "Oil Change", "icon": "assets/oil change.png"},
+      {"name": "AC Repair", "icon": "assets/ac.png"},
     ],
     "Truck": [
-        {"name": "Towing Service", "icon": Icons.local_shipping},
-      {"name": "Battery Problem", "icon": Icons.battery_alert},
-      {"name": "Flat Tire", "icon": Icons.tire_repair},
-      {"name": "Towing Service", "icon": Icons.local_shipping},
-      {"name": "Engine Repair", "icon": Icons.miscellaneous_services},
-      {"name": "Meter Issue", "icon": Icons.speed},
-      {"name": "Brake Problem", "icon": Icons.car_repair},
-      {"name": "Seat Repair", "icon": Icons.event_seat},
-    ],
-  };
+     {"name": "Towing Service", "icon": "assets/HelpSupport.png"},
+      {"name": "Flat Tire", "icon": "assets/flat_trye.png"},
+      {"name": "Battery Jump Start", "icon": "assets/batter_jump.png"},
+      {"name": "Engine Overheating", "icon":"assets/download (1).jfif"},
+      {"name": "Brake Issue", "icon": "assets/brak.png"},
+      {"name": "Oil Change", "icon": "assets/oil change.png"},
+      {"name": "AC Repair", "icon": "assets/ac.png"},
+    ],  };
 
   void updateAvailableServices(String type) {
     setState(() {
@@ -149,7 +146,7 @@ class _ServiceProvideState extends State<ServiceProvide> {
     );
   }
 
-  Widget _serviceCard(String title, IconData icon) {
+  Widget _serviceCard(String title,  icon) {
     bool isSelected = selectedService == title;
     return GestureDetector(
       // onTap: () {
@@ -168,7 +165,12 @@ class _ServiceProvideState extends State<ServiceProvide> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 50, color: Color(0xFF001E62)),
+               Image.asset(icon,
+                width: 100,
+                height: 50,
+                fit: BoxFit.contain,
+                // color: Colors.white,
+                ),
               const SizedBox(height: 10),
               Text(title,
                   textAlign: TextAlign.center,

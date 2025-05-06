@@ -88,33 +88,31 @@ class _RequestServiceScreenState extends State<RequestServiceScreen> {
 
     var  fetchedServices = {
    "Car": [
-      {"name": "Towing Service", "icon": Icons.local_shipping},
-      {"name": "Flat Tire", "icon": Icons.tire_repair},
-      {"name": "Battery Jump Start", "icon": Icons.battery_charging_full},
-      {"name": "Engine Overheating", "icon": Icons.warning},
-      {"name": "Brake Issue", "icon": Icons.car_repair},
-      {"name": "Oil Change", "icon": Icons.oil_barrel},
-      {"name": "AC Repair", "icon": Icons.ac_unit},
+      {"name": "Towing Service", "icon": "assets/HelpSupport.png"},
+      {"name": "Flat Tire", "icon": "assets/flat_trye.png"},
+      {"name": "Battery Jump Start", "icon": "assets/batter_jump.png"},
+      {"name": "Engine Overheating", "icon":"assets/download (1).jfif"},
+      {"name": "Brake Issue", "icon": "assets/brak.png"},
+      {"name": "Oil Change", "icon": "assets/oil change.png"},
+      {"name": "AC Repair", "icon": "assets/ac.png"},
     ],
     "Van": [
-      {"name": "Towing Service", "icon": Icons.local_shipping},
-      {"name": "Flat Tire", "icon": Icons.tire_repair},
-      {"name": "Chain Adjustment", "icon": Icons.build},
-      {"name": "Battery Issue", "icon": Icons.battery_alert},
-      {"name": "Engine Tune-Up", "icon": Icons.engineering},
-      {"name": "Brake Pad Change", "icon": Icons.settings},
-      {"name": "Clutch Repair", "icon": Icons.precision_manufacturing},
-      {"name": "Light Issue", "icon": Icons.lightbulb},
+       {"name": "Towing Service", "icon": "assets/HelpSupport.png"},
+      {"name": "Flat Tire", "icon": "assets/flat_trye.png"},
+      {"name": "Battery Jump Start", "icon": "assets/batter_jump.png"},
+      {"name": "Engine Overheating", "icon":"assets/download (1).jfif"},
+      {"name": "Brake Issue", "icon": "assets/brak.png"},
+      {"name": "Oil Change", "icon": "assets/oil change.png"},
+      {"name": "AC Repair", "icon": "assets/ac.png"},
     ],
     "Truck": [
-        {"name": "Towing Service", "icon": Icons.local_shipping},
-      {"name": "Battery Problem", "icon": Icons.battery_alert},
-      {"name": "Flat Tire", "icon": Icons.tire_repair},
-      {"name": "Towing Service", "icon": Icons.local_shipping},
-      {"name": "Engine Repair", "icon": Icons.miscellaneous_services},
-      {"name": "Meter Issue", "icon": Icons.speed},
-      {"name": "Brake Problem", "icon": Icons.car_repair},
-      {"name": "Seat Repair", "icon": Icons.event_seat},
+     {"name": "Towing Service", "icon": "assets/HelpSupport.png"},
+      {"name": "Flat Tire", "icon": "assets/flat_trye.png"},
+      {"name": "Battery Jump Start", "icon": "assets/batter_jump.png"},
+      {"name": "Engine Overheating", "icon":"assets/download (1).jfif"},
+      {"name": "Brake Issue", "icon": "assets/brak.png"},
+      {"name": "Oil Change", "icon": "assets/oil change.png"},
+      {"name": "AC Repair", "icon": "assets/ac.png"},
     ],};
 
 
@@ -259,8 +257,8 @@ class _RequestServiceScreenState extends State<RequestServiceScreen> {
                     isSelected ? const Color(0xFF001E62) : Colors.transparent,
                 width: 2,
               ),
-              boxShadow: [
-                const BoxShadow(
+              boxShadow: const [
+                BoxShadow(
                     color: Colors.black26,
                     blurRadius: 4.0,
                     offset: Offset(0, 2))
@@ -269,7 +267,12 @@ class _RequestServiceScreenState extends State<RequestServiceScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(service['icon'], color: Color(0xFF001E62), size: 40.0),
+                Image.asset(service['icon'],
+                width: 100,
+                height: 50,
+                fit: BoxFit.contain,
+                // color: Colors.white,
+                ),
                 const SizedBox(height: 8.0),
                 Text(service['name'],
                     textAlign: TextAlign.center,
