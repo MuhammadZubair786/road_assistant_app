@@ -21,6 +21,7 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
   String? companyAddress;
   String? loginTime;
   String companyName = "EeZee Tow"; // You can fetch this from Firestore if needed
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -61,6 +62,7 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
       drawer: CompanyDrawer(),
@@ -71,20 +73,26 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: AppBar(
-              backgroundColor: Colors.white.withOpacity(0.7),
+              backgroundColor:  const Color(0xFF001E62),
               elevation: 0,
+              leading: IconButton(
+                onPressed: () {
+                  _scaffoldKey.currentState?.openDrawer();
+                },
+                icon: Icon(Icons.menu, color: Colors.white),
+              ),
               title: Text(
                 "Welcome Eezee Town",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
-                  color: const Color(0xFF001E62),
+                  color:Colors.white,
                 ),
               ),
               centerTitle: true,
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.notifications, color: Color(0xFF001E62)),
+                  icon: const Icon(Icons.notifications, color: Colors.white),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -110,102 +118,99 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
             top: 60,
             left: 0,
             right: 0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(32),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 28),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.75),
-                      borderRadius: BorderRadius.circular(32),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12.withOpacity(0.08),
-                          blurRadius: 24,
-                          offset: Offset(0, 8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(32),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 28),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.75),
+                    borderRadius: BorderRadius.circular(32),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12.withOpacity(0.08),
+                        blurRadius: 24,
+                        offset: Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Color(0xFFe0e7ff),
+                        radius: 38,
+                        child: Image.asset(
+                          'assets/HelpSupport.png',
+                          width: 48,
+                          fit: BoxFit.contain,
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Color(0xFFe0e7ff),
-                          radius: 38,
-                          child: Image.asset(
-                            'assets/HelpSupport.png',
-                            width: 48,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        const SizedBox(width: 28),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                            
-                              Text(
-                                companyName,
-                                style: GoogleFonts.poppins(
-                                  color: Color(0xFF001E62),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                      ),
+                   
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                          
+                            Text(
+                              companyName,
+                              style: GoogleFonts.poppins(
+                                color: Color(0xFF001E62),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Icon(Icons.location_on, color: Color(0xFF001E62), size: 20),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    companyAddress ?? "Fetching location...",
+                                    style: GoogleFonts.poppins(
+                                      color: Color(0xFF001E62),
+                                      fontSize: 14,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on, color: Color(0xFF001E62), size: 20),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: Text(
-                                      companyAddress ?? "Fetching location...",
-                                      style: GoogleFonts.poppins(
-                                        color: Color(0xFF001E62),
-                                        fontSize: 14,
+                                const SizedBox(width: 10),
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: isAvailable ? Colors.green[50] : Colors.red[50],
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          color: isAvailable ? Colors.green : Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
                                       ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: isAvailable ? Colors.green[50] : Colors.red[50],
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 10,
-                                          height: 10,
-                                          decoration: BoxDecoration(
-                                            color: isAvailable ? Colors.green : Colors.red,
-                                            shape: BoxShape.circle,
-                                          ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        isAvailable ? "Online" : "Offline",
+                                        style: GoogleFonts.poppins(
+                                          color: isAvailable ? Colors.green : Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
                                         ),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          isAvailable ? "Online" : "Offline",
-                                          style: GoogleFonts.poppins(
-                                            color: isAvailable ? Colors.green : Colors.red,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -272,7 +277,7 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
                           style: GoogleFonts.poppins(
                             color: isAvailable ? Colors.green[700] : Colors.red[700],
                             fontWeight: FontWeight.w500,
-                            fontSize: 13,
+                            fontSize: 10,
                           ),
                         ),
                       ],

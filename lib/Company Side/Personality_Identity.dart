@@ -22,11 +22,12 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
   final TextEditingController branchAddressController = TextEditingController();
   final TextEditingController employeesController = TextEditingController();
   final TextEditingController legalNumberController = TextEditingController();
-  final TextEditingController locationController =
-      TextEditingController(); // To display selected location
+  final TextEditingController locationController = TextEditingController();
   LatLng? selectedLocation;
   File? _selectedFile;
   String? uploadedFileUrl;
+  var userdata;
+
   // Function to select location
   Future<void> _pickLocation() async {
     LatLng? location = await Navigator.push(
@@ -49,7 +50,6 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
                 "${placemarks.first.street}, ${placemarks.first.locality}";
           });
 
-          // Show success message in Snackbar
           ScaffoldMessenger.of(context as BuildContext).showSnackBar(
             SnackBar(
               content: Text("Location selected successfully!"),
@@ -101,7 +101,6 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
 
   // Save data to Firestore
   Future<void> _saveDataToFirestore() async {
-    // Check if any required field is empty
     if (branchController.text.isEmpty ||
         branchAddressController.text.isEmpty ||
         employeesController.text.isEmpty ||
@@ -110,12 +109,10 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
       ScaffoldMessenger.of(context as BuildContext).showSnackBar(
         SnackBar(content: Text('Please fill in all fields before submitting!')),
       );
-      return; // Stop the function from proceeding
+      return;
     }
-    // Reference to Firestore collection
     CollectionReference users =
         FirebaseFirestore.instance.collection('Personal_identity');
-    // Add validated data to Firestore
     await users.add({
       'branch': branchController.text,
       'branchAddress': branchAddressController.text,
@@ -126,9 +123,8 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
         'lng': selectedLocation!.longitude
       },
       'locationAddress': locationController.text,
-      'legalizationLetter': uploadedFileUrl, // Cloudinary uploaded file URL
+      'legalizationLetter': uploadedFileUrl,
     });
-    // Show success message
     ScaffoldMessenger.of(context as BuildContext).showSnackBar(
       SnackBar(content: Text('Data saved successfully!')),
     );
@@ -139,13 +135,10 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
     getCompanyByAccount();
   }
 
-  var userdata;
-
   Future<void> getCompanyByAccount() async {
     final doc = await FirebaseFirestore.instance
         .collection('Company')
-        .doc(FirebaseAuth
-            .instance.currentUser!.uid) // only if accountId is the document ID
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
     if (doc.exists) {
@@ -160,129 +153,428 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child:userdata==null ?
-            SizedBox(
+      backgroundColor: Colors.grey[50],
+      body: userdata == null
+          ? Container(
               height: MediaQuery.of(context).size.height,
-              child: const Center(child: CircularProgressIndicator())): Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
-            height: 120,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFF001E62), Colors.white],
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF001E62)),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      "Loading profile...",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            child: const Column(
-              children: [
-                SizedBox(height: 50,),
-                Center(
-                  child: Text(
-                    "Profile Details",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+            )
+          : SafeArea(
+              child: Column(
+                children: [
+                  // Modern Header
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(0xFF001E62),
+                          Color(0xFF001E62).withOpacity(0.9),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                            Expanded(
+                              child: Text(
+                                "Company Profile",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          "Your business information and details",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white.withOpacity(0.9),
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                  
+                  // Profile Content
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          // Profile Image Section
+                          Container(
+                            padding: EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Color(0xFF001E62).withOpacity(0.2),
+                                      width: 3,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 10,
+                                        offset: Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ClipOval(
+                                    child: userdata["imageUrl"] != null && userdata["imageUrl"].isNotEmpty
+                                        ? Image.network(
+                                            userdata["imageUrl"],
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.grey[100],
+                                                child: Icon(
+                                                  Icons.business,
+                                                  size: 40,
+                                                  color: Color(0xFF001E62).withOpacity(0.5),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Container(
+                                            color: Colors.grey[100],
+                                            child: Icon(
+                                              Icons.business,
+                                              size: 40,
+                                              color: Color(0xFF001E62).withOpacity(0.5),
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  userdata["name"] ?? "Company Name",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF001E62),
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  userdata["userType"] ?? "Company",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          
+                          SizedBox(height: 24),
+                          
+                          // Company Information Section
+                          Container(
+                            padding: EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF001E62).withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Icon(
+                                        Icons.info_outline,
+                                        color: Color(0xFF001E62),
+                                        size: 24,
+                                      ),
+                                    ),
+                                    SizedBox(width: 12),
+                                    Text(
+                                      "Company Information",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF001E62),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 24),
+                                
+                                // Business Name
+                                _buildInfoRow(
+                                  icon: Icons.business,
+                                  label: "Business Name",
+                                  value: userdata["name"] ?? "Not provided",
+                                ),
+                                
+                                Divider(height: 32, color: Colors.grey[200]),
+                                
+                                // Address
+                                _buildInfoRow(
+                                  icon: Icons.location_on,
+                                  label: "Address",
+                                  value: userdata["address"] ?? "Not provided",
+                                ),
+                                
+                                Divider(height: 32, color: Colors.grey[200]),
+                                
+                                // Contact
+                                _buildInfoRow(
+                                  icon: Icons.phone,
+                                  label: "Contact",
+                                  value: userdata["contact"] ?? "Not provided",
+                                ),
+                                
+                                Divider(height: 32, color: Colors.grey[200]),
+                                
+                                // Account Type
+                                _buildInfoRow(
+                                  icon: Icons.account_circle,
+                                  label: "Account Type",
+                                  value: userdata["userType"] ?? "Company",
+                                ),
+                              ],
+                            ),
+                          ),
+                          
+                          SizedBox(height: 24),
+                          
+                          // Action Buttons
+                          Container(
+                            padding: EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF001E62).withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Icon(
+                                        Icons.settings,
+                                        color: Color(0xFF001E62),
+                                        size: 24,
+                                      ),
+                                    ),
+                                    SizedBox(width: 12),
+                                    Text(
+                                      "Quick Actions",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF001E62),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 24),
+                                
+                                // Edit Profile Button
+                                Container(
+                                  width: double.infinity,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      // Navigate to edit profile page
+                                    },
+                                    icon: Icon(Icons.edit, color: Colors.white),
+                                    label: Text(
+                                      "Edit Profile",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color(0xFF001E62),
+                                      padding: EdgeInsets.symmetric(vertical: 16),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      elevation: 0,
+                                    ),
+                                  ),
+                                ),
+                                
+                                SizedBox(height: 16),
+                                
+                                // View Services Button
+                                Container(
+                                  width: double.infinity,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => IssueDetails(
+                                            requestData: {},
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(Icons.visibility, color: Color(0xFF001E62)),
+                                    label: Text(
+                                      "View Services",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF001E62),
+                                      ),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      padding: EdgeInsets.symmetric(vertical: 16),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        side: BorderSide(color: Color(0xFF001E62), width: 2),
+                                      ),
+                                      elevation: 0,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+    );
+  }
+  
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Color(0xFF001E62).withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
           ),
-          Center(
-            child: CircleAvatar(
-              radius: 40, // Fixed size for clean, consistent design
-              backgroundImage: NetworkImage(userdata["imageUrl"]),
-            ),
-          )
-,
-
-          RowData("Bussiness Name", userdata["name"]),
-          RowData("Address", userdata["address"]),
-          RowData("Contact", userdata["contact"]),
-
-          RowData("Account Type", userdata["userType"]),
-          // Location Picker
-          // TextField(
-          //   controller: locationController,
-          //   decoration: InputDecoration(
-          //     labelText: "Choose Location From map",
-          //     prefixIcon: Icon(Icons.home),
-          //     suffixIcon: IconButton(
-          //       icon: Icon(Icons.location_on, color: Color(0xFF001E62)),
-          //       onPressed: _pickLocation,
-          //     ),
-          //   ),
-          // ),
-
-          // _buildTextField("Number of Employees", employeesController),
-          // _buildTextField("Legal Number", legalNumberController),
-          // // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-          //   child: Text('Upload legalization letter here',
-          //       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-          // ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-          //   child: GestureDetector(
-          //     onTap: _pickFile,
-          //     child: Container(
-          //       height: 50,
-          //       decoration: BoxDecoration(
-          //         color: Colors.white,
-          //         borderRadius: BorderRadius.circular(12),
-          //         boxShadow: [
-          //           BoxShadow(
-          //               color: Colors.grey.withOpacity(0.5),
-          //               spreadRadius: 2,
-          //               blurRadius: 5,
-          //               offset: Offset(0, 3))
-          //         ],
-          //       ),
-          //       child: Center(
-          //           child: Text("Choose File",
-          //               style: TextStyle(
-          //                   fontSize: 16, fontWeight: FontWeight.bold))),
-          //     ),
-          //   ),
-          // ),
-          // if (_selectedFile != null)
-          //   Padding(
-          //       padding: EdgeInsets.all(10),
-          //       child: Text("File selected successfully")),
-
-          // SizedBox(height: 50),
-          // Center(
-          //   child: ElevatedButton(
-          //     onPressed: _saveDataToFirestore,
-          //     child: Text(
-          //       "Submit",
-          //       style: TextStyle(
-          //           fontSize: 20,
-          //           color: Colors.white,
-          //           fontWeight: FontWeight.w600),
-          //     ),
-          //     style:
-          //         ElevatedButton.styleFrom(backgroundColor: Color(0xFF001E62)),
-          //   ),
-          // ),
-
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //   children: [
-          //     // _buildArrowButton(
-          //     //     context, Icons.arrow_back, Colors.grey[300]!, Colors.black),
-          //     // ✅ Pass context
-          //     const SizedBox(width: 10),
-          //     _buildArrowButton(context, Icons.arrow_forward,
-          //         const Color(0xFF001E62), Colors.white),
-          //   ],
-          // ),
-        ]),
-      ),
+          child: Icon(
+            icon,
+            color: Color(0xFF001E62),
+            size: 20,
+          ),
+        ),
+        SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[800],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -298,7 +590,7 @@ Widget _buildArrowButton(
       icon: Icon(icon, color: iconColor),
       onPressed: () {
         Navigator.push(
-          context, // ✅ Pass the correct context
+          context,
           MaterialPageRoute(
               builder: (context) => IssueDetails(
                     requestData: {},
@@ -345,4 +637,4 @@ Widget _buildTextField(String label, TextEditingController controller) {
     child: TextField(
         controller: controller, decoration: InputDecoration(labelText: label)),
   );
-}
+} 

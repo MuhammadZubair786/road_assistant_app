@@ -16,96 +16,59 @@ class _IssueDetailsHistoryState extends State<IssueDetailsHistory> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('requests').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(child: Text("No client issues found."));
-            }
-            var issueData = snapshot.data!.docs.first;
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              _buildCard(
+                title: "Vehicle Details",
                 children: [
-                  _buildHeader(context),
-                  _buildCard(
-                    title: "Vehicle Details",
-                    children: [
-                      _buildDetailRow("Vehicle Owner",widget.requestData['car_no']),
-                      _buildDetailRow(
-                          "Vehicle Type", widget.requestData['selected_service']),
-                      _buildDetailRow(
-                          "Vehicle Name", widget.requestData['selected_vehicle']),
-                      _buildDetailRow("Vehicle Color", widget.requestData['car_color']),
-                    ],
-                  ),
-                  _buildCard(
-                    title: "Client Service Request",
-                    children: [
-                      _buildDetailRow("Client Issue Type", widget.requestData['details']),
-                      _buildDetailRow("Client Location", widget.requestData['location'],
-                          isLink: true),
-                      _buildDetailRow("Client Contact", issueData['contact_no']),
-                    ],
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                   color: Colors.white,
-                elevation: 3,
-                shape:
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                             const Text(
-                              "description :",
-                              style:
-                                  TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                issueData['details'] ?? "No description provided.",
-                                style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-      
-                  // _buildCard(
-                  //   title: "Client Added Text",
-                  //   children: [
-                  //     const Text(
-                  //       "description :",
-                  //       style:
-                  //           TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: Text(
-                  //         issueData['details'] ?? "No description provided.",
-                  //         style: const TextStyle(
-                  //             fontSize: 14, fontWeight: FontWeight.w500),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  // _buildButtons(context,widget.requestData),
+                  _buildDetailRow("Vehicle Owner", widget.requestData['car_no'] ?? 'N/A'),
+                  _buildDetailRow("Vehicle Type", widget.requestData['selected_service'] ?? 'N/A'),
+                  _buildDetailRow("Vehicle Name", widget.requestData['selected_vehicle'] ?? 'N/A'),
+                  _buildDetailRow("Vehicle Color", widget.requestData['car_color'] ?? widget.requestData['Vehicle_color'] ?? 'N/A'),
                 ],
               ),
-            );
-          },
+              _buildCard(
+                title: "Client Service Request",
+                children: [
+                  _buildDetailRow("Client Issue Type", widget.requestData['details'] ?? 'N/A'),
+                  _buildDetailRow("Client Location", widget.requestData['location'] ?? 'N/A', isLink: true),
+                  _buildDetailRow("Client Contact", widget.requestData['contact_no'] ?? 'N/A'),
+                ],
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Card(
+                  color: Colors.white,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Description:",
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            widget.requestData['details'] ?? "No description provided.",
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -197,15 +160,13 @@ class _IssueDetailsHistoryState extends State<IssueDetailsHistory> {
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: isLink ? const Color(0xFF001E62) : Colors.grey,
-              decoration:
-                  isLink ? TextDecoration.underline : TextDecoration.none,
+              decoration: isLink ? TextDecoration.underline : null,
             ),
           ),
         ],
       ),
     );
   }
-
 
   void _acceptRequest(BuildContext context,requestId) async {
 
