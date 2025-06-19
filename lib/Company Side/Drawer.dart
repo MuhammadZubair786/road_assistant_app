@@ -120,12 +120,12 @@ class _CompanyDrawerState extends State<CompanyDrawer> {
                   //     requestData: {},
                   //   ),
                   // ),
-                  buildMenuItem(
-                    context,
-                    iconPath: 'assets/manage_loc.png',
-                    title: "Manage Locations",
-                    destination: LocationPicker(),
-                  ),
+                  // buildMenuItem(
+                  //   context,
+                  //   iconPath: 'assets/manage_loc.png',
+                  //   title: "Manage Locations",
+                  //   destination: LocationPicker(),
+                  // ),
                   buildMenuItem(
                     context,
                     iconPath: 'assets/service_his.png',

@@ -1,5 +1,5 @@
+import 'package:roadside_assistance/SplashScreen.dart';
 import 'package:roadside_assistance/firebase_options.dart';
-import 'package:roadside_assistance/Company%20Side/SplashScreen.dart';
 import 'package:roadside_assistance/Company%20Side/Tabbar.dart';
 import 'package:roadside_assistance/User%20Side/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';

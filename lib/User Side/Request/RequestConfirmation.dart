@@ -59,21 +59,17 @@ class _RequestConfirmationState extends State<RequestConfirmation> {
 
   Future<void> saveRequestToFirestore() async {
     if (!_formKey.currentState!.validate()) {
-      print("Form validation failed");
       return;
     }
-    print("Saving request to Firestore...");
+
     try {
-      // Get current user ID from Firebase Authentication
       String? userId = FirebaseAuth.instance.currentUser?.uid;
       if (userId == null) {
         throw Exception("User is not logged in");
       }
 
-      final docRef =
-          await FirebaseFirestore.instance.collection('requests').add({
+      final docRef = await FirebaseFirestore.instance.collection('requests').add({
         'user_id': userId,
-        
         'car_no': carNoController.text,
         'car_color': carColorController.text,
         'location': locationController.text,
@@ -86,20 +82,33 @@ class _RequestConfirmationState extends State<RequestConfirmation> {
 
       String docId = docRef.id;
 
-      print("Request submitted successfully");
-
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Request Submitted Successfully")),
+        const SnackBar(
+          content: Text("Request Submitted Successfully"),
+          backgroundColor: Color(0xFF001E62),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+        ),
       );
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => GetServices(docid: docId,)),
+        MaterialPageRoute(builder: (context) => GetServices(docid: docId)),
       );
     } catch (e) {
-      print("Error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
+        SnackBar(
+          content: Text("Error: $e"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
+        ),
       );
     }
   }
@@ -107,153 +116,372 @@ class _RequestConfirmationState extends State<RequestConfirmation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+      backgroundColor: Colors.grey[50],
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildServiceInfo(),
+                      _buildFormSections(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            _buildSubmitButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: const Color(0xFF001E62),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: Colors.white,
+                ),
+                onPressed: () => Navigator.pop(context),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              const Expanded(
+                child: Text(
+                  "Request Details",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(width: 24), // For balance
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildServiceInfo() {
+    return Container(
+      margin: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF001E62),
+            const Color(0xFF001E62).withOpacity(0.8),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF001E62).withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.build_rounded,
+              color: Colors.white,
+              size: 32,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            selectedService,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.directions_car_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  selectedVehicle,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFormSections() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        children: [
+          _buildSection(
+            "Vehicle Details",
+            Icons.directions_car_rounded,
+            [
+              _buildInputField("Vehicle Number", carNoController),
+              _buildInputField("Vehicle Color", carColorController),
+            ],
+          ),
+          const SizedBox(height: 24),
+          _buildSection(
+            "Location",
+            Icons.location_on_rounded,
+            [
+              _buildInputField("Enter Location", locationController),
+            ],
+          ),
+          const SizedBox(height: 24),
+          _buildSection(
+            "Issue Details",
+            Icons.description_rounded,
+            [
+              _buildInputField(
+                "Describe the issue in detail",
+                detailsController,
+                maxLines: 4,
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          _buildSection(
+            "Contact Information",
+            Icons.phone_rounded,
+            [
+              _buildInputField(
+                "Contact Number",
+                contactNoController,
+                keyboardType: TextInputType.phone,
+              ),
+            ],
+          ),
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSection(String title, IconData icon, List<Widget> children) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
               Container(
-                height: 120,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xFF001E62), Colors.white],
-                  ),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF001E62).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Stack(
-                  alignment: AlignmentDirectional.center,
-                  children: [
-                    AppBar(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      leading: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.black),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ),
-                    const Positioned(
-                      top: 80,
-                      child: Text(
-                        "Request Confirmation",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Icon(
+                  icon,
+                  color: const Color(0xFF001E62),
+                  size: 24,
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(width: 16),
               Text(
-                selectedService,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-              Text(
-                "Vehicle: $selectedVehicle",
+                title,
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF001E62),
                 ),
               ),
-              buildSection("Vehicle Details", Icons.directions_car, [
-                buildInputField(" Vehicle No", carNoController),
-                buildInputField("Vehicle Color", carColorController),
-              ]),
-              buildSection("Location", Icons.location_on, [
-                buildInputField("Enter Location", locationController,
-                    icon: Icons.location_on),
-              ]),
-              buildSection("Details", Icons.list, [
-                buildInputField("Describe the issue", detailsController,
-                    maxLines: 5),
-              ]),
-              buildSection("Contact No", Icons.phone, [
-                buildInputField("Enter Contact No", contactNoController),
-              ]),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: isFormValid ? saveRequestToFirestore : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          isFormValid ? const Color(0xFF001E62) : Colors.grey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                    ),
-                    child: const Text(
-                      "Confirm and Request",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              )
             ],
+          ),
+          const SizedBox(height: 20),
+          ...children,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInputField(
+    String hint,
+    TextEditingController controller, {
+    int maxLines = 1,
+    TextInputType? keyboardType,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        controller: controller,
+        maxLines: maxLines,
+        keyboardType: keyboardType,
+        onChanged: (value) => checkFormValid(),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'This field is required';
+          }
+          return null;
+        },
+        style: const TextStyle(
+          fontSize: 16,
+          color: Color(0xFF001E62),
+        ),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(
+            color: Colors.grey[400],
+            fontSize: 16,
+          ),
+          filled: true,
+          fillColor: Colors.grey[100],
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: Colors.grey[300]!,
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(
+              color: Color(0xFF001E62),
+              width: 2,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 1,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 2,
+            ),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: maxLines > 1 ? 20 : 16,
           ),
         ),
       ),
     );
   }
 
-  Widget buildSection(String title, IconData icon, List<Widget> children) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: Colors.grey[700]),
-              const SizedBox(width: 10),
-              Text(
-                title,
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              ),
-            ],
+  Widget _buildSubmitButton() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
           ),
-          const SizedBox(height: 5),
-          ...children
         ],
       ),
-    );
-  }
-
-  Widget buildInputField(String hint, TextEditingController controller,
-      {IconData? icon, int maxLines = 1}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: TextFormField(
-        controller: controller,
-        maxLines: maxLines,
-        onChanged: (value) =>
-            checkFormValid(), // Update form validation dynamically
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(color: Colors.grey[500]),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
+      child: ElevatedButton(
+        onPressed: isFormValid ? saveRequestToFirestore : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF001E62),
+          foregroundColor: Colors.white,
+          disabledBackgroundColor: Colors.grey[300],
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
-          suffixIcon: icon != null ? Icon(icon, color: Colors.grey[600]) : null,
+          minimumSize: const Size(double.infinity, 56),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              isFormValid ? "Submit Request" : "Fill All Fields",
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+            if (isFormValid) ...[
+              const SizedBox(width: 8),
+              const Icon(
+                Icons.arrow_forward_rounded,
+                size: 20,
+              ),
+            ],
+          ],
         ),
       ),
     );

@@ -75,7 +75,7 @@ class _ServiceProvideState extends State<ServiceProvide> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.notifications, color: Colors.black),
+                  icon: const Icon(Icons.notifications, color: Colors.black),
                   onPressed: () {
                     Navigator.push(
                       context,
