@@ -301,7 +301,7 @@ class _LoginOnlyState extends State<loginOnly> {
                         children: [
                            Center(
                                     child: const Text(
-                                      'Eezee Tow',
+                                      'EezeeTow',
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.black,

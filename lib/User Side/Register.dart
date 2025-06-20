@@ -233,7 +233,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 const SizedBox(height: 120),
                 Center(
                   child: const Text(
-                    'Eezee Tow',
+                    'EezeeTow',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,

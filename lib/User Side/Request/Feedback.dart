@@ -116,232 +116,268 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Color primaryColor = const Color(0xFF001E62);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildHeader(),
+            // Decorative Illustration
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [primaryColor, primaryColor.withOpacity(0.95)],
+                ),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                        const Spacer(),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    // Illustration (trophy or stars)
+                    Icon(Icons.emoji_events_rounded, color: Colors.amber, size: 54),
+                    const SizedBox(height: 8),
+                    const Text(
+                      "Rate Your Experience",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      "Your feedback helps us improve!",
+                      style: TextStyle(
+                        fontSize: 15.5,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Company Info Card
+            Card(
+              elevation: 3,
+              shadowColor: Colors.black.withOpacity(0.08),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 28,
+                      backgroundColor: primaryColor.withOpacity(0.10),
+                      child: const Icon(Icons.business_rounded, color: Color(0xFF001E62), size: 32),
+                    ),
+                    const SizedBox(width: 18),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            companyName,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: primaryColor,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            companyAddress,
+                            style: TextStyle(
+                              fontSize: 14.5,
+                              color: Colors.grey[700],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 32),
-            _buildCompanyInfo(),
-            const SizedBox(height: 40),
-            _buildRatingSection(),
+            // Rating Section with colored accent
+            Card(
+              elevation: 2,
+              shadowColor: Colors.black.withOpacity(0.06),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              margin: const EdgeInsets.symmetric(horizontal: 32),
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 7,
+                      decoration: BoxDecoration(
+                        color: Colors.amber[600],
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(18),
+                          bottomLeft: Radius.circular(18),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "How would you rate the service?",
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        AnimatedScale(
+                          scale: _rating > 0 ? 1.1 : 1.0,
+                          duration: const Duration(milliseconds: 180),
+                          child: RatingBar.builder(
+                            initialRating: _rating,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemPadding: const EdgeInsets.symmetric(horizontal: 6.0),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star_rounded,
+                              color: Colors.amber[700],
+                              size: 38,
+                            ),
+                            unratedColor: Colors.grey[300],
+                            onRatingUpdate: (rating) {
+                              setState(() {
+                                _rating = rating;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 32),
-            _buildCommentSection(),
+            // Divider and Comment Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 48.0),
+              child: Row(
+                children: [
+                  Expanded(child: Divider(color: Colors.grey[400], thickness: 1)),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Text(
+                      "Comments",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Divider(color: Colors.grey[400], thickness: 1)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Card(
+              elevation: 2,
+              shadowColor: Colors.black.withOpacity(0.06),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              margin: const EdgeInsets.symmetric(horizontal: 32),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+                child: TextField(
+                  controller: _commentController,
+                  maxLines: 4,
+                  decoration: InputDecoration(
+                    hintText: "Share your thoughts...",
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey[300]!, width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: primaryColor, width: 1.5),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 32),
-            _buildSubmitButton(),
+            // Submit Button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: submitFeedback,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    elevation: 3,
+                  ),
+                  icon: const Icon(Icons.check_circle_outline, color: Colors.white),
+                  label: const Text(
+                    "Submit Feedback",
+                    style: TextStyle(
+                      fontSize: 17,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 24),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      height: 120,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFF001E62), Colors.white],
-        ),
-      ),
-      child: SafeArea(
-        child: Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
-            Positioned(
-              left: 8,
-              top: 8,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: Colors.white,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-            const Positioned(
-              top: 40,
-              child: Text(
-                "Rate Your Experience",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCompanyInfo() {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF001E62),
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: const Icon(
-            Icons.business_rounded,
-            color: Colors.white,
-            size: 40,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          widget.requestData["companyName"],
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF001E62),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.location_on_rounded,
-              size: 16,
-              color: Colors.grey,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              widget.requestData["companyAddress"],
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRatingSection() {
-    return Column(
-      children: [
-        const Text(
-          "How was your experience?",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF001E62),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          "Your feedback helps improve our service",
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
-          ),
-        ),
-        const SizedBox(height: 24),
-        RatingBar.builder(
-          initialRating: _rating,
-          minRating: 1,
-          direction: Axis.horizontal,
-          allowHalfRating: true,
-          itemCount: 5,
-          itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-          itemBuilder: (context, _) => const Icon(
-            Icons.star_rounded,
-            color: Color(0xFF001E62),
-          ),
-          onRatingUpdate: (rating) {
-            setState(() {
-              _rating = rating;
-            });
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCommentSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Additional Comments",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF001E62),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.grey[300]!,
-                width: 1,
-              ),
-            ),
-            child: TextField(
-              controller: _commentController,
-              maxLines: 4,
-              decoration: InputDecoration(
-                hintText: "Share your experience with us...",
-                hintStyle: TextStyle(
-                  color: Colors.grey[400],
-                  fontSize: 14,
-                ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.all(16),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSubmitButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: _rating > 0 ? submitFeedback : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF001E62),
-            foregroundColor: Colors.white,
-            disabledBackgroundColor: Colors.grey[300],
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-          ),
-          child: Text(
-            _rating > 0 ? "Submit Review" : "Please Rate Your Experience",
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
         ),
       ),
     );

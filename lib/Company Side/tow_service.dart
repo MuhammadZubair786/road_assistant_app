@@ -82,7 +82,7 @@ class _TowServiceScreenState extends State<TowServiceScreen> {
                 icon: Icon(Icons.menu, color: Colors.white),
               ),
               title: Text(
-                "Welcome Eezee Town",
+                "Welcome EezeeTow",
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

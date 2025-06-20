@@ -153,6 +153,7 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       backgroundColor: Colors.grey[50],
       body: userdata == null
           ? Container(
@@ -207,18 +208,20 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
                       children: [
                         Row(
                           children: [
-                            IconButton(
-                              icon: Icon(Icons.arrow_back, color: Colors.white, size: 28),
-                              onPressed: () => Navigator.pop(context),
-                            ),
+                            // IconButton(
+                            //   icon: Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                            //   onPressed: () => Navigator.pop(context),
+                            // ),
                             Expanded(
-                              child: Text(
-                                "Company Profile",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  letterSpacing: 0.5,
+                              child: Center(
+                                child: Text(
+                                  "Company Profile",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                               ),
                             ),
@@ -408,118 +411,118 @@ class _PersonalIdentityState extends State<PersonalIdentity> {
                             ),
                           ),
                           
-                          SizedBox(height: 24),
+                          // SizedBox(height: 24),
                           
-                          // Action Buttons
-                          Container(
-                            padding: EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 10,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFF001E62).withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                        Icons.settings,
-                                        color: Color(0xFF001E62),
-                                        size: 24,
-                                      ),
-                                    ),
-                                    SizedBox(width: 12),
-                                    Text(
-                                      "Quick Actions",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xFF001E62),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 24),
+                          // // Action Buttons
+                          // Container(
+                          //   padding: EdgeInsets.all(24),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.circular(20),
+                          //     boxShadow: [
+                          //       BoxShadow(
+                          //         color: Colors.black.withOpacity(0.05),
+                          //         blurRadius: 10,
+                          //         offset: Offset(0, 4),
+                          //       ),
+                          //     ],
+                          //   ),
+                          //   child: Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //     children: [
+                          //       Row(
+                          //         children: [
+                          //           Container(
+                          //             padding: EdgeInsets.all(8),
+                          //             decoration: BoxDecoration(
+                          //               color: Color(0xFF001E62).withOpacity(0.1),
+                          //               borderRadius: BorderRadius.circular(8),
+                          //             ),
+                          //             child: Icon(
+                          //               Icons.settings,
+                          //               color: Color(0xFF001E62),
+                          //               size: 24,
+                          //             ),
+                          //           ),
+                          //           SizedBox(width: 12),
+                          //           // Text(
+                          //           //   "Quick Actions",
+                          //           //   style: TextStyle(
+                          //           //     fontSize: 20,
+                          //           //     fontWeight: FontWeight.bold,
+                          //           //     color: Color(0xFF001E62),
+                          //           //   ),
+                          //           // ),
+                          //         ],
+                          //       ),
+                          //       // SizedBox(height: 24),
                                 
-                                // Edit Profile Button
-                                Container(
-                                  width: double.infinity,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      // Navigate to edit profile page
-                                    },
-                                    icon: Icon(Icons.edit, color: Colors.white),
-                                    label: Text(
-                                      "Edit Profile",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xFF001E62),
-                                      padding: EdgeInsets.symmetric(vertical: 16),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      elevation: 0,
-                                    ),
-                                  ),
-                                ),
+                          //       // // Edit Profile Button
+                          //       // Container(
+                          //       //   width: double.infinity,
+                          //       //   child: ElevatedButton.icon(
+                          //       //     onPressed: () {
+                          //       //       // Navigate to edit profile page
+                          //       //     },
+                          //       //     icon: Icon(Icons.edit, color: Colors.white),
+                          //       //     label: Text(
+                          //       //       "Edit Profile",
+                          //       //       style: TextStyle(
+                          //       //         fontSize: 16,
+                          //       //         fontWeight: FontWeight.w600,
+                          //       //         color: Colors.white,
+                          //       //       ),
+                          //       //     ),
+                          //       //     style: ElevatedButton.styleFrom(
+                          //       //       backgroundColor: Color(0xFF001E62),
+                          //       //       padding: EdgeInsets.symmetric(vertical: 16),
+                          //       //       shape: RoundedRectangleBorder(
+                          //       //         borderRadius: BorderRadius.circular(12),
+                          //       //       ),
+                          //       //       elevation: 0,
+                          //       //     ),
+                          //       //   ),
+                          //       // ),
                                 
-                                SizedBox(height: 16),
+                          //       // SizedBox(height: 16),
                                 
-                                // View Services Button
-                                Container(
-                                  width: double.infinity,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => IssueDetails(
-                                            requestData: {},
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icon(Icons.visibility, color: Color(0xFF001E62)),
-                                    label: Text(
-                                      "View Services",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF001E62),
-                                      ),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      padding: EdgeInsets.symmetric(vertical: 16),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        side: BorderSide(color: Color(0xFF001E62), width: 2),
-                                      ),
-                                      elevation: 0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          //       // // View Services Button
+                          //       // Container(
+                          //       //   width: double.infinity,
+                          //       //   child: ElevatedButton.icon(
+                          //       //     onPressed: () {
+                          //       //       Navigator.push(
+                          //       //         context,
+                          //       //         MaterialPageRoute(
+                          //       //           builder: (context) => IssueDetails(
+                          //       //             requestData: {},
+                          //       //           ),
+                          //       //         ),
+                          //       //       );
+                          //       //     },
+                          //       //     icon: Icon(Icons.visibility, color: Color(0xFF001E62)),
+                          //       //     label: Text(
+                          //       //       "View Services",
+                          //       //       style: TextStyle(
+                          //       //         fontSize: 16,
+                          //       //         fontWeight: FontWeight.w600,
+                          //       //         color: Color(0xFF001E62),
+                          //       //       ),
+                          //       //     ),
+                          //       //     style: ElevatedButton.styleFrom(
+                          //       //       backgroundColor: Colors.white,
+                          //       //       padding: EdgeInsets.symmetric(vertical: 16),
+                          //       //       shape: RoundedRectangleBorder(
+                          //       //         borderRadius: BorderRadius.circular(12),
+                          //       //         side: BorderSide(color: Color(0xFF001E62), width: 2),
+                          //       //       ),
+                          //       //       elevation: 0,
+                          //       //     ),
+                          //       //   ),
+                          //       // ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

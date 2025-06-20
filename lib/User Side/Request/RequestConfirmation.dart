@@ -190,8 +190,9 @@ class _RequestConfirmationState extends State<RequestConfirmation> {
 
   Widget _buildServiceInfo() {
     return Container(
-      margin: const EdgeInsets.all(24),
-      padding: const EdgeInsets.all(24),
+      width: MediaQuery.of(context).size.width * 0.9,
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,

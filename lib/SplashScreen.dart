@@ -15,7 +15,7 @@ class _SplashscreenState extends State<Splashscreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 10), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const loginOnly()),
@@ -79,7 +79,7 @@ class _SplashscreenState extends State<Splashscreen> {
                 const SizedBox(height: 40),
                 // App Name
                 const Text(
-                  'EeZee Tow',
+                  'EeZeeTow',
                   style: TextStyle(
                     fontSize: 42,
                     fontWeight: FontWeight.bold,
