@@ -79,7 +79,7 @@ class _SplashscreenState extends State<Splashscreen> {
                 const SizedBox(height: 40),
                 // App Name
                 const Text(
-                  'EeZeeTow',
+                  'EeZee Tow',
                   style: TextStyle(
                     fontSize: 42,
                     fontWeight: FontWeight.bold,
