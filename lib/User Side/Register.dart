@@ -20,7 +20,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-  String userType = "User";
+  String userType = "";
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
@@ -75,6 +75,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(
             "Password must have at least 8 characters, one uppercase, one lowercase, and one special character."),
+        backgroundColor: Colors.red,
+      ));
+      return;
+    }
+    // User type check
+    if (userType.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Please select a user type."),
         backgroundColor: Colors.red,
       ));
       return;

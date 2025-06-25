@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roadside_assistance/LoginOnly.dart';
 import '../Company Side/setting_screen.dart';
 import '../HelpSupportScreen.dart';
 import 'HistoryService.dart';
@@ -223,7 +224,7 @@ class _SideDrawerState extends State<SideDrawer> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => RegistrationScreen()),
+                                builder: (context) => loginOnly()),
                           );
                         },
                         style: ElevatedButton.styleFrom(
