@@ -102,8 +102,8 @@ class _UserProfileState extends State<UserProfile> {
 
   // 📝 Store User Data in Firestore
   Future<void> _storeUserData() async {
-    if (_ageController.text.isEmpty ||
-        int.tryParse(_ageController.text) == null) {
+    // Only validate age if provided
+    if (_ageController.text.isNotEmpty && int.tryParse(_ageController.text) == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please enter a valid age")),
       );
@@ -115,60 +115,46 @@ class _UserProfileState extends State<UserProfile> {
       );
       return;
     }
-    if (_nameController.text.isEmpty ||
-        _addressController.text.isEmpty ||
-        _ageController.text.isEmpty ||
-        _selectedGender == null ||
-        _contactController.text.isEmpty) {
+    if (_nameController.text.isEmpty  || _contactController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill all fields")),
+        const SnackBar(content: Text("Please fill all required fields")),
       );
       return;
     }
-
+    // Remove required check for age and gender
     setState(() {
       _isSavingData = true;
     });
-
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         throw Exception("User is not authenticated!");
       }
-
-      // Fetch userType from SharedPreferences (if previously stored)
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? userType = prefs.getString("userType") ??
-          "User"; // Default to "User" if not found
-
-      // Fetch existing user data to retain current image if no new upload
+      String? userType = prefs.getString("userType") ?? "User";
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .get();
-
       String? existingImageUrl = userDoc.exists ? userDoc['imageUrl'] : null;
       String imageUrlToSave = _uploadedImageUrl ?? existingImageUrl ?? "";
-
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'uid': user.uid,
         'name': _nameController.text.trim(),
         'address': _addressController.text.trim(),
-        'age': _ageController.text.trim(),
-        'gender': _selectedGender,
+        'age': _ageController.text.trim(), // can be empty
+        'gender': _selectedGender, // can be null
         'contact': _contactController.text.trim(),
-        'imageUrl': imageUrlToSave, // Store Cloudinary image URL
-        'userType': userType, // 🔥 Store userType in Firestore
+        'imageUrl': imageUrlToSave,
+        'userType': userType,
         'createdAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Profile Created Successfully!"),
           backgroundColor: Colors.green,
         ),
       );
-
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -284,7 +270,7 @@ class _UserProfileState extends State<UserProfile> {
                   TextField(
                     controller: _addressController,
                     decoration: customInputDecoration(
-                      "Enter your address",
+                      "Enter your address (optional)",
                       Icons.home,
                       suffixIcon: IconButton(
                         icon: Icon(Icons.location_on, color: Color(0xFF001E62)),
@@ -296,14 +282,14 @@ class _UserProfileState extends State<UserProfile> {
                   TextField(
                     controller: _ageController,
                     decoration: customInputDecoration(
-                        "Enter your age", Icons.calendar_today),
+                        "Enter your age (optional)", Icons.calendar_today),
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
                   const SizedBox(height: 15),
                   DropdownButtonFormField<String>(
                     decoration:
-                        customInputDecoration("Select your gender", Icons.wc),
+                        customInputDecoration("Select your gender (optional)", Icons.wc),
                     value: _selectedGender,
                     items: ["Male", "Female"].map((String gender) {
                       return DropdownMenuItem<String>(
