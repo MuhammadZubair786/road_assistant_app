@@ -11,6 +11,7 @@ import 'ServiceProvide.dart';
 import 'Tabbar.dart';
 import 'Track.dart';
 import '../HelpSupportScreen.dart';
+import '../User Side/Settings.dart';
 
 class CompanyDrawer extends StatefulWidget {
   const CompanyDrawer({super.key});
@@ -142,9 +143,7 @@ class _CompanyDrawerState extends State<CompanyDrawer> {
                     context,
                     iconPath: 'assets/account_set.png',
                     title: "Account Settings",
-                    destination: Hometab(
-                      companyAddress: '',
-                    ),
+                    destination:SettingScreen(),
                   ),
                   buildMenuItem(
                     context,

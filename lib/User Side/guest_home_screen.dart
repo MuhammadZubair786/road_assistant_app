@@ -6,9 +6,10 @@ import 'Request/RequestService.dart';
 import 'side_drawer.dart';
 import 'package:shimmer/shimmer.dart';
 import '../auth_utils.dart';
+import '../LoginOnly.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class GuestHomeScreen extends StatelessWidget {
+  const GuestHomeScreen({super.key});
 
   // Shimmer card placeholder for loading state
   static Widget _shimmerCardPlaceholder() {
@@ -60,26 +61,26 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-    onWillPop: () async {
-      bool shouldExit = await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Exit App'),
-          content: Text('Are you sure you want to exit the app?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text('Exit'),
-            ),
-          ],
-        ),
-      );
-      return shouldExit;
-    },
+      onWillPop: () async {
+        bool shouldExit = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Exit App'),
+            content: Text('Are you sure you want to exit the app?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Exit'),
+              ),
+            ],
+          ),
+        );
+        return shouldExit;
+      },
       child: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -123,6 +124,21 @@ class HomeScreen extends StatelessWidget {
                           Column(
                             children: [
                               Text("Dashboard", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.orange.withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  "Guest Mode",
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                           Container(
@@ -152,18 +168,74 @@ class HomeScreen extends StatelessWidget {
                                 ],
                               ),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => NotificationsScreen(),
-                                  ),
-                                );
+                                _showGuestModeDialog(context);
                               },
                             ),
                           ),
                         ],
                       ),
                     ),
+                  ),
+                ),
+                // Guest Mode Banner
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.all(16),
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.orange.shade100, Colors.orange.shade50],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.orange.shade300),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        color: Colors.orange.shade700,
+                        size: 24,
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Guest Mode',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange.shade700,
+                                fontSize: 16,
+                              ),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              'Explore services freely. Login when you\'re ready to submit your request.',
+                              style: TextStyle(
+                                color: Colors.orange.shade600,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => loginOnly()),
+                          );
+                        },
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Colors.orange.shade700,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 // Search and Filter Section
@@ -327,19 +399,23 @@ class HomeScreen extends StatelessWidget {
                           color: Color(0xFF001E62),
                         ),
                       ),
-                                                TextButton(
-                            onPressed: () {
-                              // Navigate to view all services
-                              // You can implement this functionality later
-                            },
-                            child: Text(
-                              "View All",
-                              style: TextStyle(
-                                color: Colors.blue[700],
-                                fontWeight: FontWeight.w600,
-                              ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RequestServiceScreen(),
                             ),
+                          );
+                        },
+                        child: Text(
+                          "View All",
+                          style: TextStyle(
+                            color: Colors.blue[700],
+                            fontWeight: FontWeight.w600,
                           ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -347,31 +423,23 @@ class HomeScreen extends StatelessWidget {
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('Company')
-                      .where('isAvailable',
-                          isEqualTo: true) // ✅ Only show available companies
+                      .where('isAvailable', isEqualTo: true)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      // Show shimmer placeholders while loading
                       return Column(
-                        children: List.generate(3, (index) => HomeScreen._shimmerCardPlaceholder()),
+                        children: List.generate(3, (index) => GuestHomeScreen._shimmerCardPlaceholder()),
                       );
                     }
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                       return Center(
-                          child:
-                              Text("No available company services at the moment."));
+                          child: Text("No available company services at the moment."));
                     }
                     return Column(
                       children: snapshot.data!.docs.map((doc) {
-                        // Debug print
-                        // print("Firestore Document: \\${doc.data()}");
-        
-                        Map<String, dynamic> data =
-                            doc.data() as Map<String, dynamic>;
+                        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
                         String companyName = data['name'] ?? 'No name available';
-                        String companyLocation =
-                            data['address'] ?? 'No location available';
+                        String companyLocation = data['address'] ?? 'No location available';
                         return Card(
                           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -384,10 +452,65 @@ class HomeScreen extends StatelessWidget {
                                 BuildServiceCard(
                                   title: companyName,
                                   address: companyLocation,
-                                  rating:
-                                      4.5, // Replace with actual rating if available
+                                  rating: 4.5,
                                 ),
                                 SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                                                         Expanded(
+                                       child: OutlinedButton(
+                                         onPressed: () {
+                                           Navigator.push(
+                                             context,
+                                             MaterialPageRoute(
+                                               builder: (context) => RequestServiceScreen(),
+                                             ),
+                                           );
+                                         },
+                                        style: OutlinedButton.styleFrom(
+                                          side: BorderSide(color: Color(0xFF001E62)),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Book Service',
+                                          style: TextStyle(
+                                            color: Color(0xFF001E62),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                                                         Expanded(
+                                       child: ElevatedButton(
+                                         onPressed: () {
+                                           Navigator.push(
+                                             context,
+                                             MaterialPageRoute(
+                                               builder: (context) => RequestServiceScreen(),
+                                             ),
+                                           );
+                                         },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(0xFF001E62),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'View Details',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -404,4 +527,148 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-}
+
+  void _showGuestModeDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.notifications_off,
+                color: Colors.orange.shade700,
+                size: 28,
+              ),
+              SizedBox(width: 12),
+              Text(
+                'Guest Mode',
+                style: TextStyle(
+                  color: Colors.orange.shade700,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'You can explore services and select your vehicle. Login when you\'re ready to submit your request.',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[700],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Continue as Guest',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => loginOnly()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF001E62),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'Login',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showLoginPrompt(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Icon(
+                Icons.login,
+                color: Color(0xFF001E62),
+                size: 28,
+              ),
+              SizedBox(width: 12),
+              Text(
+                'Login Required',
+                style: TextStyle(
+                  color: Color(0xFF001E62),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[700],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => loginOnly()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF001E62),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'Login',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+} 

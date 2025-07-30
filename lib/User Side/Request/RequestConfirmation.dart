@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'GetService.dart';
+import '../../auth_utils.dart';
 
 class RequestConfirmation extends StatefulWidget {
   const RequestConfirmation({super.key});
@@ -26,7 +27,18 @@ class _RequestConfirmationState extends State<RequestConfirmation> {
   @override
   void initState() {
     super.initState();
-    fetchSelectedData();
+    _checkAuthAndFetchData();
+  }
+
+  Future<void> _checkAuthAndFetchData() async {
+    // Check if user is logged in when entering this screen
+    bool isAuthenticated = await AuthUtils.checkAuthAndRedirect(context);
+    if (isAuthenticated) {
+      fetchSelectedData();
+    } else {
+      // If not authenticated, go back to previous screen
+      Navigator.pop(context);
+    }
   }
 
   Future<void> fetchSelectedData() async {

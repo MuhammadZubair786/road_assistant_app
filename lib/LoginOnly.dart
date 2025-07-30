@@ -104,11 +104,16 @@ class _LoginOnlyState extends State<loginOnly> {
 
       // Navigate based on user type
       if (userType == "User") {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-          (route) => false,
-        );
+        // Check if we should go back to previous screen or to home
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context); // Go back to previous screen
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+            (route) => false,
+          );
+        }
       } else if (userType == "Company") {
         _getCompanyLocationAndLogin(userCredential);
       } else {

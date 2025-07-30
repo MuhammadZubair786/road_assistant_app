@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:roadside_assistance/LoginOnly.dart';
 import 'package:flutter/material.dart';
-
+import 'package:roadside_assistance/auth_utils.dart';
 import 'User Side/Register.dart';
+import 'User Side/home_screen.dart';
+import 'User Side/guest_home_screen.dart';
 
 class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
@@ -16,11 +18,26 @@ class _SplashscreenState extends State<Splashscreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 4), () {
+      _checkAuthAndNavigate();
+    });
+  }
+
+  void _checkAuthAndNavigate() async {
+    bool isLoggedIn = await AuthUtils.isUserLoggedIn();
+    
+    if (isLoggedIn) {
+      // User is logged in, navigate to home screen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const loginOnly()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
-    });
+    } else {
+      // User is not logged in, navigate to guest home screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const GuestHomeScreen()),
+      );
+    }
   }
 
   @override

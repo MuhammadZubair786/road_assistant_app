@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:roadside_assistance/LoginOnly.dart';
 import '../Company Side/setting_screen.dart';
 import '../HelpSupportScreen.dart';
+import '../auth_utils.dart';
 import 'HistoryService.dart';
 import 'Notification.dart';
 import 'Register.dart';
@@ -58,96 +59,141 @@ class _SideDrawerState extends State<SideDrawer> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
               decoration: const BoxDecoration(color: Color(0xFF001E62)),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.white,
-                    backgroundImage: _userImageUrl != null
-                        ? NetworkImage(_userImageUrl!)
-                        : null,
-                    child: _userImageUrl == null
-                        ? const Icon(Icons.person,
-                            size: 50, color: Color(0xFF001E62))
-                        : null,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    _userName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    _userEmail,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
+              child: FutureBuilder<bool>(
+                future: AuthUtils.isUserLoggedIn(),
+                builder: (context, snapshot) {
+                  bool isLoggedIn = snapshot.data ?? false;
+                  
+                  return Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundColor: Colors.white,
+                        backgroundImage: isLoggedIn && _userImageUrl != null
+                            ? NetworkImage(_userImageUrl!)
+                            : null,
+                        child: isLoggedIn && _userImageUrl == null
+                            ? const Icon(Icons.person,
+                                size: 50, color: Color(0xFF001E62))
+                            : isLoggedIn 
+                                ? null
+                                : const Icon(Icons.person_outline,
+                                    size: 50, color: Color(0xFF001E62)),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        isLoggedIn ? _userName : "Guest User",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        isLoggedIn ? _userEmail : "Browse services as guest",
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
+                      if (!isLoggedIn) ...[
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => loginOnly()),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF001E62),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            "Login",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  );
+                },
               ),
             ),
 
             // Menu Items Section
             Expanded(
-              child: ListView(
-                children: [
-                  buildMenuItem(
-                    context,
-                    icon: Icons.dashboard,
-                    title: "Dashboard",
-                    destination: HomeScreen(),
-                  ),
-                  buildMenuItem(
-                    context,
-                    icon: Icons.location_on,
-                    title: "Find Nearby Companies",
-                    destination: RequestServiceScreen(),
-                  ),
-                  buildMenuItem(
-                    context,
-                    icon: Icons.build,
-                    title: "History of Service",
-                    destination: ServiceHistory(),
-                  ),
-                  buildMenuItem(
-                    context,
-                    icon: Icons.notifications,
-                    title: "Notifications",
-                    destination: NotificationsScreen(),
-                  ),
-                  buildMenuItem(
-                    context,
-                    icon: Icons.person,
-                    title: "Account Settings",
-                    destination: SettingScreen(),
-                  ),
-                  buildMenuItem(
-                    context,
-                    icon: Icons.help_outline,
-                    title: "Help & Support",
-                    destination: HelpSupportScreen(),
-                  ),
-                  ListTile(
-                    leading: const CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.logout, color: Color(0xFF001E62)),
-                    ),
-                    title: const Text(
-                      "Log Out",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+              child: FutureBuilder<bool>(
+                future: AuthUtils.isUserLoggedIn(),
+                builder: (context, snapshot) {
+                  bool isLoggedIn = snapshot.data ?? false;
+                  
+                  return ListView(
+                    children: [
+                      buildMenuItem(
+                        context,
+                        icon: Icons.dashboard,
+                        title: "Dashboard",
+                        destination: HomeScreen(),
                       ),
-                    ),
-                    onTap: () {
-                      _showLogoutDialog(context);
-                    },
-                  ),
-                ],
+                      buildMenuItem(
+                        context,
+                        icon: Icons.location_on,
+                        title: "Find Nearby Companies",
+                        destination: RequestServiceScreen(),
+                      ),
+                      if (isLoggedIn) ...[
+                        buildMenuItem(
+                          context,
+                          icon: Icons.build,
+                          title: "History of Service",
+                          destination: ServiceHistory(),
+                        ),
+                        buildMenuItem(
+                          context,
+                          icon: Icons.notifications,
+                          title: "Notifications",
+                          destination: NotificationsScreen(),
+                        ),
+                        buildMenuItem(
+                          context,
+                          icon: Icons.person,
+                          title: "Account Settings",
+                          destination: SettingScreen(),
+                        ),
+                      ],
+                      buildMenuItem(
+                        context,
+                        icon: Icons.help_outline,
+                        title: "Help & Support",
+                        destination: HelpSupportScreen(),
+                      ),
+                      if (isLoggedIn) ...[
+                        ListTile(
+                          leading: const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: Icon(Icons.logout, color: Color(0xFF001E62)),
+                          ),
+                          title: const Text(
+                            "Log Out",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                          onTap: () {
+                            _showLogoutDialog(context);
+                          },
+                        ),
+                      ],
+                    ],
+                  );
+                },
               ),
             ),
           ],
@@ -219,7 +265,7 @@ class _SideDrawerState extends State<SideDrawer> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          await FirebaseAuth.instance.signOut();
+                          await AuthUtils.logout();
                           Navigator.of(context).pop(); // Close the dialog
                           Navigator.pushReplacement(
                             context,
@@ -259,6 +305,7 @@ class _SideDrawerState extends State<SideDrawer> {
     required IconData icon,
     required String title,
     required Widget destination,
+    bool requiresAuth = false,
   }) {
     return ListTile(
       leading: CircleAvatar(
@@ -272,7 +319,13 @@ class _SideDrawerState extends State<SideDrawer> {
           fontSize: 16,
         ),
       ),
-      onTap: () {
+      onTap: () async {
+        if (requiresAuth) {
+          bool isAuthenticated = await AuthUtils.checkAuthAndRedirect(context);
+          if (!isAuthenticated) {
+            return;
+          }
+        }
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => destination),

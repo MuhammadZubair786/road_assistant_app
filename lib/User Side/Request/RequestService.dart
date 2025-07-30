@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shimmer/shimmer.dart';
 import '../home_screen.dart';
 import 'RequestConfirmation.dart';
+import '../../auth_utils.dart';
 
 class RequestServiceScreen extends StatefulWidget {
   const RequestServiceScreen({super.key});
@@ -330,10 +331,14 @@ class _RequestServiceScreenState extends State<RequestServiceScreen> {
         bool isSelected = selectedService == service['name'];
 
         return GestureDetector(
-          onTap: () {
-            setState(() {
-              selectedService = service['name'];
-            });
+          onTap: () async {
+            // Check if user is logged in before proceeding
+            bool isAuthenticated = await AuthUtils.checkAuthAndRedirect(context);
+            if (isAuthenticated) {
+              setState(() {
+                selectedService = service['name'];
+              });
+            }
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
@@ -436,14 +441,18 @@ class _RequestServiceScreenState extends State<RequestServiceScreen> {
       child: ElevatedButton(
         onPressed: selectedService == null
             ? null
-            : () {
-                saveSelectedService();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RequestConfirmation(),
-                  ),
-                );
+            : () async {
+                // Check if user is logged in before proceeding
+                bool isAuthenticated = await AuthUtils.checkAuthAndRedirect(context);
+                if (isAuthenticated) {
+                  saveSelectedService();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RequestConfirmation(),
+                    ),
+                  );
+                }
               },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF001E62),
