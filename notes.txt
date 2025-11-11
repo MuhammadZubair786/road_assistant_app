@@ -1,0 +1,194 @@
+50 final
+50 sectional
+
+theory of computation:=>automate theory(abstract machine)=>solve computation problems
+
+
+
+appastract machine
+different type of machines
+
+computation : mathematical models=>jahn sa orginate hua ha=>  
+
+all modes =>absactract machine=>kua ka orginal nhi ho gei mathetimaclaally ho gei
+
+different language we learn => not related to programming lanaguge=>
+
+that lanaguge: rules,gammer rules,mathemiatical rules apply hota ha
+
+first level,second level=>power wise or assfiecnce wise interment to move =>final machine is turing machiane =>
+
+then we learn how to conclude or convert into physical computer
+
+
+we have multiply structure ha where we able to make transaction or simulate if input then show 
+
+
+start from basic machine => we see problem =><afficense problem,space issue,we add steps=>
+then we add or make strong
+
+analyze power of model
+
+intractability question we see
+computational problem
+time complexity questions
+
+for analyansis he model
+
+machine=>transaction diagram (tree diagram,graph,)=>google map (example)
+airroute => we make graph=> every graph point => vertex
+
+graph =>machine=>what we math behind
+
+machine => abstract =>relate to => imaginery value,imaginery abstract => not related to physical machine
+type:
+finite automate(fa): no any memory:modeling base is fa
+pushdown automata(pda): solve also fa problems or one step more=>one directional memory
+turing machine(tm):solve all problems=>bidirectional memory (read or write both)
+
+all prolem euqailent to tm
+
+all machine right now equal => tm 
+
+
+euailent to truning machine=>computer
+
+then we able to check which machine lise to which machine
+
+different components of memory
+
+basic model =>cpu=>memory=> maiamize to processor
+
+automaton,automata=>mean processing or programming=> tempory memory
+states
+
+
+
+tempory memory=>cpu=>input=>output=>program memory
+
+fa: no temp memory
+pushdown automata: stack memory
+turning machine:
+
+fa:(elevators,vending machine,lexical analayzers)=>no need memory
+pa: stack=>push,po
+parsers for proming language(medium computing power)=> we able to hold
+tm: random access memory(read,write both)
+
+fa:lower power
+tm:more power
+turning machine is mostpoiwerful machineknow as computational model
+not solve all problems
+
+solveable,decideable,recogniazable=> that lanaguge =>is decide not recogniazable,any lanigae => that decideable but not solveable
+
+
+tm : ma research ka area open ha (np)
+p=>polynomial problem=>fast as compared to np
+
+np(not deterministic polynomials=>believed to take expotential time to be solved
+
+language : set of stroing
+string: sequsnce of symbols from alphabets
+
+string: 
+language:
+alphabet:basic element of any language (every language) we define by submission=> define basic elements where our language or models make=>all symbols =>all percentage=> all enter=> all letter=>$ => all symbols => set of eleements
+
+alphabets join or make string=>
+
+one elements is a sequenece of symbols =>that make language
+
+language =>all the possible  set of string=>used to describe of computation problems=>with set
+
+string=>  sequesnce of symbols =>without set =>make a seuqnce of symbols from alphabets
+
+codnition may be : start with a,aa
+
+
+string: cat,dog,house
+lang: {cat,dog,house}
+alphabet:{a,b,c,...,z}
+
+computation is translate to set membership.
+
+when make any machine(string)=>111=> equal to 3
+unary => number equalt to 1 => when add one=> 1+1=>11(2)=>only symbolics equalent
+
+string operation
+
+contactenation(join)=>side  by side write same =->make new string=>one after then other
+order important is very 
+
+reverse => reverse order(last will be first or first will be last )
+
+string length : count of alphabelst ,.number of alphabaets
+
+empty string : no letter ,no alphanets=>represtend by lambda=>length must be zero
+
+when we use contenation => then reult must be same
+
+substring:
+subsequence of consectutive character
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
